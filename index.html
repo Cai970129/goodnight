@@ -1,63 +1,229 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专属晚安电台 🌙</title>
+    <title>晚安，读一页书 🌙</title>
     <style>
-        body {
-            background: linear-gradient(135deg, #0f172a, #1e1b4b);
-            color: #e2e8f0;
-            text-align: center;
-            padding-top: 120px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            height: 100vh;
+            padding: 0;
+        }
+        body {
+            background-color: #f7f4ee;
+            color: #4a403a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
+            width: 100%;
+            max-width: 420px;
         }
-        .icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
+        /* 顶部标题卡片 */
+        .header-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 16px;
         }
-        h2 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            font-weight: 400;
+        .header-text .subtitle {
+            font-size: 11px;
+            color: #9c8e83;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c2420;
+            margin-bottom: 6px;
+        }
+        .header-text p {
+            font-size: 12px;
+            color: #8c7e73;
+        }
+        .moon-img {
+            width: 64px;
+            height: 64px;
+            background: #fdf6ec;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        
+        /* 今晚听什么卡片 */
+        .reading-section-title {
+            font-size: 12px;
+            color: #9c8e83;
             letter-spacing: 1px;
+            margin: 20px 0 10px 4px;
+            text-transform: uppercase;
         }
-        p {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-bottom: 30px;
+        .book-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 16px;
         }
+        .book-cover {
+            width: 72px;
+            height: 72px;
+            background: #2c2420;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .book-info h3 {
+            font-size: 15px;
+            color: #2c2420;
+            margin-bottom: 4px;
+        }
+        .book-info p {
+            font-size: 12px;
+            color: #8c7e73;
+            line-height: 1.4;
+        }
+
+        /* 播放器面板 */
+        .player-panel {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 24px;
+        }
+        .player-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #8c7e73;
+        }
+        /* 自定义美观的音频控件 */
         audio {
             width: 100%;
-            margin-top: 15px;
-            border-radius: 30px;
+            height: 40px;
+            accent-color: #7c6b5e; /* 调节播放器滑块颜色 */
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+
+        /* 我的书架 */
+        .shelf-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c2420;
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+        .shelf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .shelf-item {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+        .shelf-item-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        .shelf-item h4 {
+            font-size: 13px;
+            color: #2c2420;
+            margin-bottom: 4px;
+        }
+        .shelf-item p {
+            font-size: 11px;
+            color: #9c8e83;
+        }
+
+        /* 底部标语 */
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #b5a497;
+            margin-top: 30px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="icon">🌙</div>
-        <h2>听见你的声音，就安心了</h2>
-        <p>睡不着的时候，我在陪着你</p>
-        
-        <audio controls>
-            <source src="sleep.mp3" type="audio/mpeg">
-            您的浏览器不支持音频播放
-        </audio>
+        <!-- 顶部卡片 -->
+        <div class="header-card">
+            <div class="header-text">
+                <div class="subtitle">Our Little Corner</div>
+                <h1>晚安，读一页书</h1>
+                <p>给睡不着的夜晚，一点温柔的陪伴。</p>
+            </div>
+            <div class="moon-img">🌙</div>
+        </div>
+
+        <!-- 今晚听什么 -->
+        <div class="reading-section-title">Tonight's Reading · 今晚听什么</div>
+        <div class="book-card">
+            <div class="book-cover">📖</div>
+            <div class="book-info">
+                <h3>《睡前读给你听》</h3>
+                <p>第 01 章 · 今晚的声音<br>🎧 适合闭上眼睛慢慢听</p>
+            </div>
+        </div>
+
+        <!-- 播放器面板 -->
+        <div class="player-panel">
+            <div class="player-top">
+                <span>✨ 今晚，让心慢下来</span>
+                <span>💤 睡前电台</span>
+            </div>
+            <!-- 音频播放控件 -->
+            <audio controls>
+                <source src="sleep.mp3" type="audio/mpeg">
+                您的浏览器不支持音频播放
+            </audio>
+        </div>
+
+        <!-- 我的书架 -->
+        <div class="shelf-title">我的书架</div>
+        <div class="shelf-grid">
+            <div class="shelf-item">
+                <div class="shelf-item-icon">🌙</div>
+                <h4>睡前故事</h4>
+                <p>轻松、安静的故事</p>
+            </div>
+            <div class="shelf-item">
+                <div class="shelf-item-icon">🤎</div>
+                <h4>一起读的书</h4>
+                <p>一章一章慢慢听</p>
+            </div>
+        </div>
+
+        <!-- 底部文案 -->
+        <div class="footer-note">
+            一个只属于我们的小小角落 🤍
+        </div>
     </div>
+
 </body>
 </html>
