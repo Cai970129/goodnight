@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专属晚安电台 🌙</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: #e2e8f0;
+            text-align: center;
+            padding-top: 120px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 30px;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🌙</div>
+        <h2>听见你的声音，就安心了</h2>
+        <p>睡不着的时候，我在陪着你</p>
+        
+        <audio controls>
+            <source src="sleep.mp3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+    </div>
+</body>
+</html>
