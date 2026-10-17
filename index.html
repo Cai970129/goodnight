@@ -11,219 +11,319 @@
             padding: 0;
         }
         body {
-            background-color: #f7f4ee;
-            color: #4a403a;
+            background-color: #f8f4ec;
+            color: #49382d;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 20px 16px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 24px 16px 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         }
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 410px;
         }
-        /* 顶部标题卡片 */
-        .header-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 24px;
+
+        /* 顶部 Header */
+        .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            margin-bottom: 16px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding: 0 4px;
         }
-        .header-text .subtitle {
+        .header-subtitle {
             font-size: 11px;
-            color: #9c8e83;
-            letter-spacing: 1.5px;
+            color: #a39385;
+            letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 6px;
         }
-        .header-text h1 {
-            font-size: 20px;
+        .header-title {
+            font-size: 22px;
             font-weight: 600;
-            color: #2c2420;
-            margin-bottom: 6px;
-        }
-        .header-text p {
-            font-size: 12px;
-            color: #8c7e73;
-        }
-        .moon-img {
-            width: 64px;
-            height: 64px;
-            background: #fdf6ec;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-        }
-        
-        /* 今晚听什么卡片 */
-        .reading-section-title {
-            font-size: 12px;
-            color: #9c8e83;
-            letter-spacing: 1px;
-            margin: 20px 0 10px 4px;
-            text-transform: uppercase;
-        }
-        .book-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            margin-bottom: 16px;
-        }
-        .book-cover {
-            width: 72px;
-            height: 72px;
-            background: #2c2420;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-        }
-        .book-info h3 {
-            font-size: 15px;
-            color: #2c2420;
+            color: #362920;
             margin-bottom: 4px;
         }
-        .book-info p {
-            font-size: 12px;
-            color: #8c7e73;
-            line-height: 1.4;
+        .header-desc {
+            font-size: 13px;
+            color: #8c7a6c;
+        }
+        .moon-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 8px rgba(217, 183, 107, 0.4));
         }
 
-        /* 播放器面板 */
-        .player-panel {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        /* 播放器核心卡片 */
+        .player-card {
+            background: #fffcf6;
+            border-radius: 24px;
+            padding: 24px 20px;
+            box-shadow: 0 8px 30px rgba(73, 56, 45, 0.06);
             margin-bottom: 24px;
+            border: 1px solid rgba(230, 220, 208, 0.6);
         }
-        .player-top {
+        .now-playing-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #362920;
+            margin-bottom: 4px;
+        }
+        .now-playing-subtitle {
+            font-size: 12px;
+            color: #8ba089;
+            margin-bottom: 16px;
+        }
+
+        /* 进度条 */
+        .progress-container {
+            margin-bottom: 16px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #efe8de;
+            border-radius: 3px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #8ba089;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+        .time-display {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: #8c7e73;
-        }
-        /* 自定义美观的音频控件 */
-        audio {
-            width: 100%;
-            height: 40px;
-            accent-color: #7c6b5e; /* 调节播放器滑块颜色 */
+            font-size: 11px;
+            color: #a39385;
+            margin-top: 6px;
         }
 
-        /* 我的书架 */
-        .shelf-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #2c2420;
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+        .play-btn {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: #8ba089;
+            color: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(139, 160, 137, 0.4);
+        }
+
+        /* 章节列表区块 */
+        .section-tag {
+            font-size: 11px;
+            color: #8f9e8d;
+            letter-spacing: 1.5px;
             margin-bottom: 12px;
             padding-left: 4px;
+            font-weight: 500;
         }
-        .shelf-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .playlist {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 28px;
         }
-        .shelf-item {
-            background: #ffffff;
+        .episode-item {
+            background: #fffcf6;
             border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            padding: 14px 16px;
+            border: 1px solid rgba(230, 220, 208, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .shelf-item-icon {
-            font-size: 20px;
-            margin-bottom: 8px;
+        .episode-item:hover, .episode-item.active {
+            border-color: #8ba089;
+            background: rgba(139, 160, 137, 0.05);
         }
-        .shelf-item h4 {
+        .episode-info h4 {
             font-size: 13px;
-            color: #2c2420;
-            margin-bottom: 4px;
+            color: #362920;
+            margin-bottom: 2px;
         }
-        .shelf-item p {
+        .episode-info p {
             font-size: 11px;
-            color: #9c8e83;
+            color: #a39385;
+        }
+        .episode-status {
+            font-size: 12px;
+            color: #8ba089;
         }
 
-        /* 底部标语 */
+        /* 页脚 */
         .footer-note {
             text-align: center;
             font-size: 11px;
             color: #b5a497;
-            margin-top: 30px;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- 顶部卡片 -->
-        <div class="header-card">
-            <div class="header-text">
-                <div class="subtitle">Our Little Corner</div>
-                <h1>晚安，读一页书</h1>
-                <p>给睡不着的夜晚，一点温柔的陪伴。</p>
+        <!-- 顶部标题 -->
+        <div class="header">
+            <div>
+                <div class="header-subtitle">OUR LITTLE CORNER</div>
+                <div class="header-title">晚安，读一页书</div>
+                <div class="header-desc">今晚，想读给你听。</div>
             </div>
-            <div class="moon-img">🌙</div>
+            <div class="moon-icon">🌙</div>
         </div>
 
-        <!-- 今晚听什么 -->
-        <div class="reading-section-title">Tonight's Reading · 今晚听什么</div>
-        <div class="book-card">
-            <div class="book-cover">📖</div>
-            <div class="book-info">
-                <h3>《睡前读给你听》</h3>
-                <p>第 01 章 · 今晚的声音<br>🎧 适合闭上眼睛慢慢听</p>
-            </div>
-        </div>
+        <!-- 播放器核心面板 -->
+        <div class="player-card">
+            <div class="now-playing-title" id="currentTitle">请选择想听的章节</div>
+            <div class="now-playing-subtitle" id="currentSubtitle">点击下方列表开始播放</div>
 
-        <!-- 播放器面板 -->
-        <div class="player-panel">
-            <div class="player-top">
-                <span>✨ 今晚，让心慢下来</span>
-                <span>💤 睡前电台</span>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">00:00</span>
+                    <span id="duration">00:00</span>
+                </div>
             </div>
-            <!-- 音频播放控件 -->
-            <audio controls>
-                <source src="sleep.mp3" type="audio/mpeg">
-                您的浏览器不支持音频播放
-            </audio>
-        </div>
 
-        <!-- 我的书架 -->
-        <div class="shelf-title">我的书架</div>
-        <div class="shelf-grid">
-            <div class="shelf-item">
-                <div class="shelf-item-icon">🌙</div>
-                <h4>睡前故事</h4>
-                <p>轻松、安静的故事</p>
-            </div>
-            <div class="shelf-item">
-                <div class="shelf-item-icon">🤎</div>
-                <h4>一起读的书</h4>
-                <p>一章一章慢慢听</p>
+            <div class="controls">
+                <button class="play-btn" id="playBtn">▶</button>
             </div>
         </div>
 
-        <!-- 底部文案 -->
+        <!-- 章节列表（你可以无限往下加新章节！） -->
+        <div class="section-tag">CHAPTERS · 章节选集</div>
+        <div class="playlist" id="playlist">
+            <!-- 章节 1 -->
+            <div class="episode-item active" onclick="playEpisode(0)">
+                <div class="episode-info">
+                    <h4>第 01 章 · 晚安前的小温柔</h4>
+                    <p>朗读者：我 · 适合闭上眼睛听</p>
+                </div>
+                <div class="episode-status">▶</div>
+            </div>
+            <!-- 章节 2 -->
+            <div class="episode-item" onclick="playEpisode(1)">
+                <div class="episode-info">
+                    <h4>第 02 章 · 那些失眠的夜里</h4>
+                    <p>朗读者：我 · 伴你入眠</p>
+                </div>
+                <div class="episode-status">▷</div>
+            </div>
+            <!-- 如果想加第 3 章，直接复制上面一段改名字和文件名即可！ -->
+        </div>
+
         <div class="footer-note">
             一个只属于我们的小小角落 🤍
         </div>
     </div>
 
+    <!-- 音频引擎 -->
+    <audio id="audio"></audio>
+
+    <script>
+        // 章节配置文件：在这里填入你的音频文件名和对应的标题！
+        const episodes = [
+            { title: "第 01 章 · 晚安前的小温柔", src: "chapter1.mp3" },
+            { title: "第 02 章 · 那些失眠的夜里", src: "chapter2.mp3" }
+            // 如果加第3章，格式就是： { title: "第 03 章 · 标题", src: "chapter3.mp3" },
+        ];
+
+        let currentIndex = 0;
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const currentTitle = document.getElementById('currentTitle');
+        const currentSubtitle = document.getElementById('currentSubtitle');
+        const progressFill = document.getElementById('progressFill');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const episodeItems = document.querySelectorAll('.episode-item');
+
+        // 加载某一个章节
+        function loadEpisode(index) {
+            currentIndex = index;
+            audio.src = episodes[index].src;
+            currentTitle.innerText = episodes[index].title;
+            currentSubtitle.innerText = "正在播放 · 第 " + (index + 1) + " 章";
+
+            // 更新列表的高亮状态
+            episodeItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                    item.querySelector('.episode-status').innerText = '▶';
+                } else {
+                    item.classList.remove('active');
+                    item.querySelector('.episode-status').innerText = '▷';
+                }
+            });
+        }
+
+        // 点击某章节播放
+        function playEpisode(index) {
+            loadEpisode(index);
+            audio.play();
+        }
+
+        // 初始化加载第一章
+        loadEpisode(0);
+
+        // 播放按钮交互
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        });
+
+        audio.addEventListener('play', () => { playBtn.innerText = '❚❚'; });
+        audio.addEventListener('pause', () => { playBtn.innerText = '▶'; });
+
+        // 进度条更新
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.innerText = formatTime(audio.duration);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if(audio.duration) {
+                const pct = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = pct + '%';
+                currentTimeEl.innerText = formatTime(audio.currentTime);
+            }
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        });
+
+        function formatTime(sec) {
+            if (isNaN(sec)) return "00:00";
+            let m = Math.floor(sec / 60);
+            let s = Math.floor(sec % 60);
+            return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+        }
+    </script>
 </body>
 </html>
