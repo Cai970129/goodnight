@@ -1,36 +1,178 @@
-<box gap={3}>
-  <row align=start gap={3}>
-    <AsyncImage query="hand drawn cozy bedroom illustration sleeping orange cat window moonlight books watercolor warm cream pastel" aspectRatio="3:4" maxWidth="112px"/>
-    <box flex="1" gap={1}>
-      **01｜手绘绘本首页**
-  奶油米白背景、月亮、窗户、小猫和植物，整体温柔治愈。
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedtime Reading - 听书页面</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif, -apple-system, BlinkMacSystemFont;
+        }
+        /* 自定义柔和背景色与拟物阴影 */
+        .bg-warm {
+            background-color: #FDFBF7;
+        }
+        .card-clay {
+            background: #F9F4EB;
+            box-shadow: 6px 6px 16px rgba(212, 196, 178, 0.3), 
+                        -6px -6px 16px rgba(255, 255, 255, 0.8);
+        }
+        .card-clay-inset {
+            background: #F4EEDF;
+            box-shadow: inset 3px 3px 6px rgba(212, 196, 178, 0.4), 
+                        inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body class="bg-warm min-h-screen flex items-center justify-center p-6 text-[#7A6B5D]">
 
-  <text color="secondary" size="sm">适合做你们网站的主视觉。</text>
-</box>  </row>
-  <divider color="subtle"/>
-  <row align=start gap={3}>
-    <AsyncImage query="hand drawn cozy watercolor open book headphones music player warm beige paper illustration" aspectRatio="3:4" maxWidth="112px"/>
-    <box flex="1" gap={1}>
-      **02｜睡前播放器**
-  包含播放、暂停、进度条、前后跳转、收藏和睡眠定时。
-</box>  </row>
-  <divider color="subtle"/>
-  <row align=start gap={3}>
-    <AsyncImage query="cute hand drawn watercolor books stack potted plant teddy bear warm pastel cream illustration" aspectRatio="3:4" maxWidth="112px"/>
-    <box flex="1" gap={1}>
-      **03｜书架分类**
-  温柔哄睡
-</box>  </row>
-</box>
-<box border radius="xl" padding={4} gap={3}>
-  <row align="center" gap={3}>
-    <box background="surface-secondary" radius="lg" size="52px" align="center" justify="center">
-      <icon name="file-code" size="2xl"/>
-    </box>
-    <box flex="1" gap={1}>
-      **bedtime_reading_handdrawn.html**
-      <text color="secondary" size="sm">完整网页 · HTML + CSS + JavaScript</text>
-    </box>
-  </row>
-  [下载网页代码](sandbox:/mnt/data/bedtime_reading_handdrawn.html?_chatgptios_conversationID=6ad44b64-9f54-83ec-95b0-8bbfcb445571&_chatgptios_messageID=fa15bedb-705a-4ee4-9841-031de3843118)
-</box>
+    <!-- 主容器 -->
+    <div class="w-full max-w-5xl card-clay rounded-3xl p-6 grid grid-cols-12 gap-6 relative overflow-hidden">
+        
+        <!-- 左侧导航栏 -->
+        <div class="col-span-3 flex flex-col justify-between pr-4 border-r border-[#EFE6D8]">
+            <div>
+                <!-- Logo / 标题 -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold italic tracking-wide text-[#6B5B4B]">Bedtime</h1>
+                    <h1 class="text-2xl font-bold italic tracking-wide text-[#6B5B4B]">Reading <span class="text-rose-400">♡</span></h1>
+                    <p class="text-xs text-[#9E8B78] mt-3 leading-relaxed">你读书的声音<br>是我最好的晚安</p>
+                    <span class="text-rose-400 text-xs">♥</span>
+                </div>
+
+                <!-- 导航菜单 -->
+                <nav class="space-y-2">
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#EFE6D8] font-medium text-[#5A4B3D] shadow-sm">
+                        <span>🏠</span> 首页
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-[#EFE6D8]/50 transition text-[#8C7A6B]">
+                        <span>📚</span> 我的书架
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-[#EFE6D8]/50 transition text-[#8C7A6B]">
+                        <span>🎧</span> 对方的声音
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-[#EFE6D8]/50 transition text-[#8C7A6B]">
+                        <span>⭐</span> 收藏
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-[#EFE6D8]/50 transition text-[#8C7A6B]">
+                        <span>⚙️</span> 设置
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="text-[10px] text-[#B5A493]">
+                4. 手绘插画风 (治愈可爱)
+            </div>
+        </div>
+
+        <!-- 右侧主内容区 -->
+        <div class="col-span-9 flex flex-col gap-6">
+            
+            <!-- 顶部头图插画区 -->
+            <div class="relative h-44 rounded-2xl overflow-hidden shadow-inner bg-[#EADCC9]">
+                <!-- 顶栏小头像 -->
+                <div class="absolute top-3 right-4 flex items-center gap-3 bg-white/40 backdrop-blur-md px-3 py-1.5 rounded-full text-xs">
+                    <div class="flex items-center gap-1">
+                        <div class="w-6 h-6 rounded-full bg-orange-200 flex items-center justify-center text-[10px]">茂</div>
+                        <span>茂</span>
+                    </div>
+                    <div class="flex items-center gap-1 border-l border-white/60 pl-3">
+                        <div class="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center text-[10px]">A</div>
+                        <span>Anton</span>
+                    </div>
+                </div>
+                <!-- 插画背景图占位（可替换为你自己的手绘图） -->
+                <div class="absolute inset-0 flex items-center justify-center text-[#8C7A6B] bg-gradient-to-t from-[#e6d3bd] to-[#f4ebd0]">
+                    <span class="text-sm tracking-widest">[ 治愈系猫咪房间手绘插画背景 ]</span>
+                </div>
+            </div>
+
+            <!-- 中间核心区：播放器与睡眠定时 -->
+            <div class="grid grid-cols-12 gap-6">
+                
+                <!-- 播放器卡片 -->
+                <div class="col-span-8 card-clay-inset p-5 rounded-2xl flex flex-col justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-xl bg-[#E4D5C1] flex-shrink-0 overflow-hidden shadow">
+                            <!-- 书籍封面占位 -->
+                            <div class="w-full h-full bg-amber-700/20 flex items-center justify-center text-xs font-bold">小王子</div>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-base text-[#5A4B3D]">《小王子》</h2>
+                            <p class="text-xs text-[#9E8B78] mt-1">我为你读 · 第4章</p>
+                        </div>
+                    </div>
+
+                    <!-- 进度条 -->
+                    <div class="my-4">
+                        <div class="flex justify-between text-[10px] text-[#A89684] mb-1">
+                            <span>14:26</span>
+                            <span>32:10</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-[#E4D5C1] rounded-full overflow-hidden">
+                            <div class="w-[45%] h-full bg-[#D4A373] rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- 播放控制按钮 -->
+                    <div class="flex items-center justify-between px-2 text-[#7A6B5D]">
+                        <button class="hover:text-black">🔀</button>
+                        <button class="hover:text-black text-lg">⏮</button>
+                        <button class="w-10 h-10 rounded-full bg-[#5A4B3D] text-white flex items-center justify-center shadow-md hover:scale-105 transition">
+                            ⏸
+                        </button>
+                        <button class="hover:text-black text-lg">⏭</button>
+                        <button class="hover:text-black">♡</button>
+                    </div>
+                </div>
+
+                <!-- 睡眠定时卡片 -->
+                <div class="col-span-4 card-clay-inset p-4 rounded-2xl flex flex-col justify-between">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-[#6B5B4B]">
+                        <span>🌙</span> 睡眠定时
+                    </div>
+                    <div class="space-y-2 my-2">
+                        <button class="w-full py-2 text-xs rounded-xl bg-[#EAE0D0] hover:bg-[#E2D5C3] transition text-[#6B5B4B] shadow-sm">15分钟</button>
+                        <button class="w-full py-2 text-xs rounded-xl bg-[#EAE0D0] hover:bg-[#E2D5C3] transition text-[#6B5B4B] shadow-sm">30分钟</button>
+                        <button class="w-full py-2 text-xs rounded-xl bg-[#EAE0D0] hover:bg-[#E2D5C3] transition text-[#6B5B4B] shadow-sm">60分钟</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 底部：书籍分类 -->
+            <div>
+                <h3 class="text-xs font-bold text-[#6B5B4B] mb-3">书籍分类</h3>
+                <div class="grid grid-cols-5 gap-3">
+                    <div class="card-clay-inset p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:translate-y-[-2px] transition cursor-pointer">
+                        <span class="text-xl">📖</span>
+                        <span class="text-[11px] text-[#7A6B5D]">治愈散文</span>
+                    </div>
+                    <div class="card-clay-inset p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:translate-y-[-2px] transition cursor-pointer">
+                        <span class="text-xl">🥪</span>
+                        <span class="text-[11px] text-[#7A6B5D]">文学经典</span>
+                    </div>
+                    <div class="card-clay-inset p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:translate-y-[-2px] transition cursor-pointer">
+                        <span class="text-xl">🌱</span>
+                        <span class="text-[11px] text-[#7A6B5D]">心理成长</span>
+                    </div>
+                    <div class="card-clay-inset p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:translate-y-[-2px] transition cursor-pointer">
+                        <span class="text-xl">🍵</span>
+                        <span class="text-[11px] text-[#7A6B5D]">宗教信仰</span>
+                    </div>
+                    <div class="card-clay-inset p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:translate-y-[-2px] transition cursor-pointer">
+                        <span class="text-xl">🗺️</span>
+                        <span class="text-[11px] text-[#7A6B5D]">旅行随笔</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
