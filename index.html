@@ -109,8 +109,8 @@
                 <div class="flex items-center gap-3">
                     <img src="maoyu.jpg.jpg" alt="陈冲散文作品《猫鱼》封面" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-white/50 flex-shrink-0"/>
                     <div class="min-w-0 flex-1">
-                        <h2 class="font-bold text-sm text-[#4a3a2c] truncate">《猫鱼》</h2>
-                        <p class="text-[11px] text-[#9c8672] mt-0.5 truncate">我为你读 · 前言</p>
+                        <h2 id="audioTitle" class="font-bold text-sm text-[#4a3a2c] truncate">《猫鱼》</h2>
+                        <p id="audioAuthor" class="text-[11px] text-[#9c8672] mt-0.5 truncate">我为你读 · 前言</p>
                     </div>
                 </div>
 
@@ -134,6 +134,29 @@
                     </button>
                     <button class="text-base hover:text-black">⏭</button>
                     <button id="likeBtn" onclick="toggleLike()" class="text-sm text-[#9c8672] hover:text-rose-500 transition">♡</button>
+                </div>
+            </div>
+
+            <!-- 📜 章节选择列表卡片 -->
+            <div class="card-inset p-4 rounded-2xl space-y-2">
+                <h3 class="text-xs font-bold text-[#594636] mb-2 px-1">📜 章节选集</h3>
+                
+                <!-- 章节 1：前言 -->
+                <div onclick="switchTrack('前言.m4a', '《猫鱼》', '我为你读 · 前言')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-xs text-[#c28e5d] font-bold">▶</span>
+                        <span class="text-xs font-bold text-[#4a3a2c]">前言</span>
+                    </div>
+                    <span class="text-[10px] text-[#9c8672]">朗读</span>
+                </div>
+
+                <!-- 章节 2：后续新章节占位（等你上传 chapter2.m4a 后可直接点击生效） -->
+                <div onclick="switchTrack('chapter2.m4a', '《猫鱼》', '第一章 · 平江路老房子')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-xs text-[#c28e5d] font-bold">▶</span>
+                        <span class="text-xs font-bold text-[#4a3a2c]">第一章：平江路老房子</span>
+                    </div>
+                    <span class="text-[10px] text-[#9c8672]">待收听</span>
                 </div>
             </div>
 
@@ -215,17 +238,17 @@
         const bannerData = [
             {
                 img: "平摊猫.jpg",
-                quote: "“记忆，好像早晨爱人离别后枕头上柔软的凹印，那是他在你生命里存在过的证据”",
+                quote: "“记忆,好像早晨爱人离别后枕头上柔软的凹印,那是他在你生命里存在过的证据”",
                 source: "—— 陈冲《猫鱼》"
             },
             {
                 img: "端着猫.jpg",
-                quote: "“我们的头脑总是不停地把记忆里的碎片逻辑化、合理化、美化或丑化，而且每一次造访，都似乎令它离原始印象更远一些”",
+                quote: "“我们的头脑总是不停地把记忆里的碎片逻辑化、合理化、美化或丑化,而且每一次造访,都似乎令它离原始印象更远一些”",
                 source: "—— 陈冲《猫鱼》"
             },
             {
                 img: "盒子猫.jpg",
-                quote: "“也许，要保持原始的记忆，唯有不去触动它”",
+                quote: "“也许,要保持原始的记忆,唯有不去触动它”",
                 source: "—— 陈冲《猫鱼》"
             }
         ];
@@ -304,7 +327,17 @@
             audio.currentTime = percent * audio.duration;
         }
 
-        // 7. 爱心收藏切换
+        // 7. 切换章节并自动播放
+        function switchTrack(audioSrc, title, subtitle) {
+            audio.src = audioSrc;
+            document.getElementById('audioTitle').innerText = title;
+            document.getElementById('audioAuthor').innerText = subtitle;
+            audio.play();
+            isPlaying = true;
+            playBtn.innerText = '⏸';
+        }
+
+        // 8. 爱心收藏切换
         let isLiked = false;
         function toggleLike() {
             const likeBtn = document.getElementById('likeBtn');
