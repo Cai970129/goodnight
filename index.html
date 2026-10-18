@@ -101,13 +101,13 @@
         <div class="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-0.5">
             
             <!-- 隐藏的音频播放源 -->
-            <audio id="audioPlayer" src="前言.m4a" preload="metadata"></audio>
+            <audio id="audioPlayer" src="audio1.m4a" preload="metadata"></audio>
 
             <!-- 核心播放器卡片 -->
             <div class="card-inset p-4 rounded-2xl flex flex-col justify-between">
                 <!-- 顶部：封面与标题 -->
                 <div class="flex items-center gap-3">
-                    <img src="maoyu.jpg.jpg" alt="陈冲散文作品《猫鱼》封面" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-white/50 flex-shrink-0"/>
+                    <img src="maoyu.jpg" alt="陈冲散文作品《猫鱼》封面" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-white/50 flex-shrink-0"/>
                     <div class="min-w-0 flex-1">
                         <h2 id="audioTitle" class="font-bold text-sm text-[#4a3a2c] truncate">《猫鱼》</h2>
                         <p id="audioAuthor" class="text-[11px] text-[#9c8672] mt-0.5 truncate">我为你读 · 前言</p>
@@ -142,7 +142,7 @@
                 <h3 class="text-xs font-bold text-[#594636] mb-2 px-1">📜 章节选集</h3>
                 
                 <!-- 章节 1：前言 -->
-                <div onclick="switchTrack('前言.m4a', '《猫鱼》', '我为你读 · 前言')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
+                <div onclick="switchTrack('audio1.m4a', '《猫鱼》', '我为你读 · 前言')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
                     <div class="flex items-center gap-2.5">
                         <span class="text-xs text-[#c28e5d] font-bold">▶</span>
                         <span class="text-xs font-bold text-[#4a3a2c]">前言</span>
@@ -150,7 +150,7 @@
                     <span class="text-[10px] text-[#9c8672]">朗读</span>
                 </div>
 
-                <!-- 章节 2：后续新章节占位（等你上传 chapter2.m4a 后可直接点击生效） -->
+                <!-- 章节 2：后续新章节占位 -->
                 <div onclick="switchTrack('chapter2.m4a', '《猫鱼》', '第一章 · 平江路老房子')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
                     <div class="flex items-center gap-2.5">
                         <span class="text-xs text-[#c28e5d] font-bold">▶</span>
