@@ -67,7 +67,7 @@
             <!-- 插画与金句欣赏区域 -->
             <div class="relative h-44 rounded-2xl overflow-hidden shadow-inner bg-[#decbb5] flex flex-col justify-between p-3.5 mb-4">
                 <!-- 背景插画图 -->
-                <img id="bannerImg" src="平摊猫.JPG" 
+                <img id="bannerImg" src="books/01-MaoYu/images/cat-resting.jpg"
                      alt="治愈插画" 
                      class="absolute inset-0 w-full h-full object-cover transition-all duration-500"/>
                 
@@ -101,13 +101,13 @@
         <div class="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-0.5">
             
             <!-- 隐藏的音频播放源 -->
-            <audio id="audioPlayer" src="audio1.m4a" preload="metadata"></audio>
+            <audio id="audioPlayer" src="books/01-MaoYu/audio/00-preface.m4a" preload="metadata"></audio>
 
             <!-- 核心播放器卡片 -->
             <div class="card-inset p-4 rounded-2xl flex flex-col justify-between">
                 <!-- 顶部：封面与标题 -->
                 <div class="flex items-center gap-3">
-                    <img src="⁠maoyu.jpg.jpg" alt="陈冲散文作品《猫鱼》封面" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-white/50 flex-shrink-0"/>
+                    <img src="books/01-MaoYu/images/cover.jpg" alt="陈冲散文作品《猫鱼》封面" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-white/50 flex-shrink-0"/>
                     <div class="min-w-0 flex-1">
                         <h2 id="audioTitle" class="font-bold text-sm text-[#4a3a2c] truncate">《猫鱼》</h2>
                         <p id="audioAuthor" class="text-[11px] text-[#9c8672] mt-0.5 truncate">我为你读 · 前言</p>
@@ -142,7 +142,7 @@
                 <h3 class="text-xs font-bold text-[#594636] mb-2 px-1">📜 章节选集</h3>
                 
                 <!-- 章节 1：前言 -->
-                <div onclick="switchTrack('audio1.m4a', '《猫鱼》', '我为你读 · 前言')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
+                <div onclick="switchTrack('books/01-MaoYu/audio/00-preface.m4a', '《猫鱼》', '我为你读 · 前言')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
                     <div class="flex items-center gap-2.5">
                         <span class="text-xs text-[#c28e5d] font-bold">▶</span>
                         <span class="text-xs font-bold text-[#4a3a2c]">前言</span>
@@ -151,7 +151,7 @@
                 </div>
 
                 <!-- 章节 2：后续新章节占位 -->
-                <div onclick="switchTrack('chapter2.m4a', '《猫鱼》', '第一章 · 平江路老房子')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
+                <div onclick="switchTrack('books/01-MaoYu/audio/01-chapter.m4a', '《猫鱼》', '第一章 · 平江路老房子')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
                     <div class="flex items-center gap-2.5">
                         <span class="text-xs text-[#c28e5d] font-bold">▶</span>
                         <span class="text-xs font-bold text-[#4a3a2c]">第一章：平江路老房子</span>
@@ -237,17 +237,17 @@
         // 插画与金句轮播数据
         const bannerData = [
             {
-                img: "平摊猫.JPG",
+                img: "books/01-MaoYu/images/cat-resting.jpg",
                 quote: "“记忆,好像早晨爱人离别后枕头上柔软的凹印,那是他在你生命里存在过的证据”",
                 source: "—— 陈冲《猫鱼》"
             },
             {
-                img: "端着猫.JPG",
+                img: "books/01-MaoYu/images/cat-held.jpg",
                 quote: "“我们的头脑总是不停地把记忆里的碎片逻辑化、合理化、美化或丑化,而且每一次造访,都似乎令它离原始印象更远一些”",
                 source: "—— 陈冲《猫鱼》"
             },
             {
-                img: "盒子猫.JPG",
+                img: "books/01-MaoYu/images/cat-in-box.jpg",
                 quote: "“也许,要保持原始的记忆,唯有不去触动它”",
                 source: "—— 陈冲《猫鱼》"
             }
