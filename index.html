@@ -1,48 +1,182 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#f7f1e5">
-    <meta name="application-version" content="1.0.0">
-    <meta name="description" content="你的声音，是我最好的晚安。一个可以定时收听的私人书架。">
-    <title>Bedtime Reading · 睡前听书</title>
-    <link rel="stylesheet" href="./asserts/css/main.css">
-    <link rel="manifest" href="./manifest.webmanifest">
-    <script type="module" src="./asserts/js/app.js"></script>
-</head>
-<body>
-<div class="app-shell">
-    <header class="app-header">
-        <div><h1>Bedtime Reading <span aria-hidden="true">♡</span></h1><p>你的声音 · 是我最好的晚安</p></div>
-    </header>
-    <p id="notice" class="notice" role="status" hidden></p>
-    <audio id="audioPlayer" preload="metadata"></audio>
-    <main id="mainContent" aria-label="听书内容" tabindex="-1">
-        <section id="homeView" aria-label="收听">
-            <div id="bannerPanel" class="banner">
-                <img id="bannerImg" alt="" hidden>
-                <div class="banner-shade"></div>
-                <div class="banner-top"><span>💌 字句予你</span><button id="nextBannerBtn" hidden>换一张 ↻</button></div>
-                <div class="banner-caption"><p id="bannerQuote">让故事陪你入眠。</p><div><span id="bannerSource"></span><span id="bannerIndex"></span></div></div>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+        <meta content="#f7f1e5" name="theme-color">
+        <meta content="1.0.0" name="application-version">
+        <meta content="你的声音，是我最好的晚安。一个可以定时收听的私人书架。" name="description">
+        <title>Bedtime Reading · 睡前听书</title>
+        <link href="./asserts/css/main.css" rel="stylesheet">
+        <link href="./manifest.webmanifest" rel="manifest">
+        <script src="./asserts/js/app.js" type="module"></script>
+    </head>
+    <body>
+        <div class="app-shell">
+            <header class="app-header">
+                <div>
+                    <h1>Bedtime Reading <span aria-hidden="true">♡</span></h1>
+                    <p>你的声音 · 是我最好的晚安</p>
+                </div>
+                <div aria-label="CL" class="cl-mark" role="img">
+                    <span aria-hidden="true">c</span>
+                    <span aria-hidden="true">L</span>
+                </div>
+            </header>
+            <p class="notice" hidden id="notice" role="status"></p>
+            <audio id="audioPlayer" preload="metadata"></audio>
+            <main aria-label="听书内容" id="mainContent" tabindex="-1">
+                <section aria-label="收听" id="homeView">
+                    <div class="banner" id="bannerPanel">
+                        <img alt="" hidden id="bannerImg">
+                        <div class="banner-shade"></div>
+                        <div class="banner-top">
+                            <span>💌 字句予你</span>
+                            <button hidden id="nextBannerBtn">换一张 ↻</button>
+                        </div>
+                        <div class="banner-caption">
+                            <p id="bannerQuote">让故事陪你入眠。</p>
+                            <div>
+                                <span id="bannerSource"></span>
+                                <span id="bannerIndex"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <section aria-label="音频播放器" class="player-panel surface">
+                        <div class="player-book">
+                            <div class="player-cover" id="playerCoverContainer"></div>
+                            <div class="book-info">
+                                <h2 id="audioTitle">《猫鱼》</h2>
+                                <p id="audioAuthor">陈冲 · 前言</p>
+                            </div>
+                            <button aria-label="收藏本书" aria-pressed="false" class="icon-btn" disabled id="likeBtn">♡</button>
+                        </div>
+                        <div class="time-row">
+                            <span id="currentTime">00:00</span>
+                            <span id="durationTime">00:00</span>
+                        </div>
+                        <input aria-label="播放进度" disabled id="progressBar" max="1000" min="0" step="1" type="range" value="0">
+                        <div class="player-controls">
+                            <label class="speed-label">
+                                <span class="sr-only">播放速度</span>
+                                <select aria-label="播放速度" class="speed-select" id="playerSpeed">
+                                    <option value="0.75">0.75×</option>
+                                    <option selected value="1">1×</option>
+                                    <option value="1.25">1.25×</option>
+                                    <option value="1.5">1.5×</option>
+                                    <option value="2">2×</option>
+                                </select>
+                            </label>
+                            <button aria-label="上一节" class="icon-btn" disabled id="prevBtn">
+                                <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
+                                    <path d="M6 5v14M18 5l-9 7 9 7Z"></path>
+                                </svg>
+                            </button>
+                            <button aria-label="播放" aria-pressed="false" class="play-btn" disabled id="playBtn">▶</button>
+                            <button aria-label="下一节" class="icon-btn" disabled id="nextBtn">
+                                <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
+                                    <path d="M18 5v14M6 5l9 7-9 7Z"></path>
+                                </svg>
+                            </button>
+                            <button aria-label="换书" class="icon-btn" id="switchBookBtn" title="换书">
+                                <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
+                                    <path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <p aria-live="polite" hidden id="playerStatus" role="status"></p>
+                    </section>
+                    <section aria-labelledby="chapterTitle" class="chapter-panel surface">
+                        <div class="section-heading">
+                            <h3 id="chapterTitle">章节目录</h3>
+                            <span id="chapterCount"></span>
+                        </div>
+                        <label class="search-label"><span class="sr-only">筛选章节</span><input aria-label="筛选章节" id="chapterSearch" placeholder="查找章节或分节" type="search"></label>
+                        <div id="chapterList"></div>
+                    </section>
+                    <section aria-labelledby="timerTitle" class="timer-panel surface">
+                        <div class="section-heading">
+                            <h3 id="timerTitle">🌙 睡眠定时</h3>
+                            <div class="timer-summary">
+                                <span id="timerStatus"></span>
+                                <button aria-label="取消定时" class="icon-btn" disabled hidden id="cancelTimerBtn" title="取消定时">×</button>
+                            </div>
+                        </div>
+                        <div class="timer-options">
+                            <button aria-pressed="false" data-minutes="15">15 分钟</button>
+                            <button aria-pressed="false" data-minutes="30">30 分钟</button>
+                            <button aria-pressed="false" id="trackTimerBtn">当前节结束</button>
+                            <button aria-pressed="false" id="chapterTimerBtn">当前章结束</button>
+                        </div>
+                    </section>
+                    <section class="book-details" hidden id="bookDetails">
+                        <div class="details-heading">
+                            <h3>关于这本书</h3>
+                            <a class="pdf-link" hidden id="pdfOpen" rel="noopener" target="_blank">PDF 原文 <span aria-hidden="true">↗</span></a>
+                        </div>
+                        <p id="bookDescription"></p>
+                    </section>
+                </section>
+                <section aria-labelledby="shelfTitle" hidden id="shelfView">
+                    <div class="view-heading">
+                        <h2 id="shelfTitle" tabindex="-1">我的书架</h2>
+                        <p id="shelfDescription">选一本书，听一段故事。</p>
+                    </div>
+                    <label class="search-label"><span class="sr-only">搜索书名或作者</span><input aria-label="搜索书名或作者" id="bookSearch" placeholder="搜索书名或作者" type="search"></label>
+                    <div aria-label="书籍分类" class="category-filters" id="categoryFilters"></div>
+                    <div class="library-errors" hidden id="libraryErrors"></div>
+                    <button class="secondary-btn" hidden id="retryLibraryBtn">重新加载书架</button>
+                    <div id="bookList"></div>
+                    <p class="empty-state" hidden id="shelfEmpty">还没有书籍。</p>
+                </section>
+                <section aria-labelledby="settingsTitle" hidden id="settingsView">
+                    <div class="view-heading">
+                        <h2 id="settingsTitle" tabindex="-1">收听设置</h2>
+                        <p>让故事按你的节奏继续。</p>
+                    </div>
+                    <div class="setting-row">
+                        <label for="settingsSpeed">播放速度</label>
+                        <div class="speed-label">
+                            <select class="speed-select" id="settingsSpeed">
+                                <option value="0.75">0.75×</option>
+                                <option value="1">1×</option>
+                                <option value="1.25">1.25×</option>
+                                <option value="1.5">1.5×</option>
+                                <option value="2">2×</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <label for="autoNext">自动播放下一节<small>按目录顺序收听，书末停止</small></label>
+                        <input checked id="autoNext" type="checkbox">
+                    </div>
+                    <div class="setting-row settings-clear">
+                        <div>
+                            清除收藏和设置
+                            <small>
+                                清除当前浏览器的收藏和收听设置
+                            </small>
+                        </div>
+                        <button class="text-btn" id="clearRecordsBtn">清除</button>
+                    </div>
+                    <p class="help">收藏和设置保存在当前浏览器中。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p>
+                </section>
+            </main>
+            <nav aria-label="主导航">
+                <button aria-current="page" data-view="home" id="homeNav"><span aria-hidden="true">⌂</span>首页</button>
+                <button data-view="shelf" id="shelfNav"><span aria-hidden="true">▤</span>书架</button>
+                <button data-view="favorites" id="favoritesNav"><span aria-hidden="true">♡</span>收藏</button>
+                <button data-view="settings" id="settingsNav"><span aria-hidden="true">⚙</span>设置</button>
+            </nav>
+        </div>
+        <dialog aria-labelledby="clearDialogTitle" id="clearDialog">
+            <h2 id="clearDialogTitle">清除收藏和设置？</h2>
+            <p>收藏和收听设置将被清除，书籍文件不受影响。</p>
+            <div class="dialog-actions">
+                <button class="secondary-btn" id="cancelClearBtn">取消</button>
+                <button class="primary-btn" id="confirmClearBtn">确认清除</button>
             </div>
-            <section class="player-panel surface" aria-label="音频播放器">
-                <div class="player-book"><div id="playerCoverContainer" class="player-cover"></div><div class="book-info"><h2 id="audioTitle">《猫鱼》</h2><p id="audioAuthor">陈冲 · 前言</p></div><button id="likeBtn" class="icon-btn" aria-label="收藏本书" aria-pressed="false" disabled>♡</button></div>
-                <div class="time-row"><span id="currentTime">00:00</span><span id="durationTime">00:00</span></div>
-                <input id="progressBar" type="range" min="0" max="1000" step="1" value="0" aria-label="播放进度" disabled>
-                <div class="player-controls"><label class="speed-label"><span class="sr-only">播放速度</span><select id="playerSpeed" aria-label="播放速度"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><button id="prevBtn" class="icon-btn" aria-label="上一节" disabled>⏮</button><button id="playBtn" class="play-btn" aria-label="播放" aria-pressed="false" disabled>▶</button><button id="nextBtn" class="icon-btn" aria-label="下一节" disabled>⏭</button><button id="switchBookBtn" class="text-btn">换书</button></div>
-                <p id="playerStatus" role="status" aria-live="polite" hidden></p>
-            </section>
-            <section class="chapter-panel surface" aria-labelledby="chapterTitle"><div class="section-heading"><h3 id="chapterTitle">章节目录</h3><span id="chapterCount"></span></div><label class="search-label"><span class="sr-only">筛选章节</span><input id="chapterSearch" type="search" placeholder="查找章节或分节" aria-label="筛选章节"></label><div id="chapterList"></div></section>
-            <section class="timer-panel surface" aria-labelledby="timerTitle"><div class="section-heading"><h3 id="timerTitle">🌙 睡眠定时</h3><span id="timerStatus" role="status"></span></div><div class="timer-options"><button data-minutes="15" aria-pressed="false">15 分钟</button><button data-minutes="30" aria-pressed="false">30 分钟</button><button id="trackTimerBtn" aria-pressed="false">当前节结束</button><button id="chapterTimerBtn" aria-pressed="false">当前章结束</button></div><div class="timer-actions"><button id="cancelTimerBtn" class="icon-btn" aria-label="取消定时" disabled>×</button></div></section>
-            <section id="bookDetails" class="book-details" hidden><h3>关于这本书</h3><p id="bookDescription"></p><div id="pdfLinks" class="resource-links" hidden><a id="pdfOpen" target="_blank" rel="noopener">打开 PDF</a><a id="pdfDownload" download>下载 PDF</a></div></section>
-        </section>
-        <section id="shelfView" hidden aria-labelledby="shelfTitle"><div class="view-heading"><h2 id="shelfTitle" tabindex="-1">我的书架</h2><p id="shelfDescription">选一本书，听一段故事。</p></div><label class="search-label"><span class="sr-only">搜索书名或作者</span><input id="bookSearch" type="search" placeholder="搜索书名或作者" aria-label="搜索书名或作者"></label><div id="categoryFilters" class="category-filters" aria-label="书籍分类"></div><div id="libraryErrors" class="library-errors" hidden></div><button id="retryLibraryBtn" class="secondary-btn" hidden>重新加载书架</button><div id="bookList"></div><p id="shelfEmpty" class="empty-state" hidden>还没有书籍。</p></section>
-        <section id="settingsView" hidden aria-labelledby="settingsTitle"><div class="view-heading"><h2 id="settingsTitle" tabindex="-1">收听设置</h2><p>让故事按你的节奏继续。</p></div><div class="setting-row"><label for="settingsSpeed">播放速度</label><select id="settingsSpeed"><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div><div class="setting-row"><label for="autoNext">自动播放下一节<small>按目录顺序收听，书末停止</small></label><input id="autoNext" type="checkbox" checked></div><div class="setting-row settings-clear"><div>清除收藏和设置<small>清除当前浏览器的收藏和收听设置</small></div><button id="clearRecordsBtn" class="text-btn">清除</button></div><p class="help">收藏和设置保存在当前浏览器中。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p></section>
-    </main>
-    <nav aria-label="主导航"><button id="homeNav" data-view="home" aria-current="page"><span aria-hidden="true">⌂</span>首页</button><button id="shelfNav" data-view="shelf"><span aria-hidden="true">▤</span>书架</button><button id="favoritesNav" data-view="favorites"><span aria-hidden="true">♡</span>收藏</button><button id="settingsNav" data-view="settings"><span aria-hidden="true">⚙</span>设置</button></nav>
-</div>
-<dialog id="clearDialog" aria-labelledby="clearDialogTitle"><h2 id="clearDialogTitle">清除收藏和设置？</h2><p>收藏和收听设置将被清除，书籍文件不受影响。</p><div class="dialog-actions"><button id="cancelClearBtn" class="secondary-btn">取消</button><button id="confirmClearBtn" class="primary-btn">确认清除</button></div></dialog>
-<noscript>请启用 JavaScript 后使用睡前听书。</noscript>
-</body>
+        </dialog>
+        <noscript>请启用 JavaScript 后使用睡前听书。</noscript>
+    </body>
 </html>

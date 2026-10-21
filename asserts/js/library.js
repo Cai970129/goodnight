@@ -5,6 +5,13 @@ function requireText(value, name) {
     return value.trim();
 }
 
+function sourceURL(value) {
+    if (!value) return null;
+    const url = new URL(value);
+    if (url.protocol !== 'https:') throw new Error('来源链接必须使用 HTTPS');
+    return url.href;
+}
+
 export function resolveResource(path, manifestURL) {
     if (path == null) return null;
     requireText(path, '资源路径');
@@ -47,7 +54,10 @@ export function parseBook(data, manifestURL, expectedId) {
         book.chapters.push(chapter);
     }
     for (const banner of data.banners || []) {
-        book.banners.push({ image: resolveResource(banner.image, manifestURL), quote: requireText(banner.quote, '摘录'), source: requireText(banner.source, '摘录出处') });
+        book.banners.push({
+            image: resolveResource(banner.image, manifestURL), quote: requireText(banner.quote, '摘录'),
+            source: requireText(banner.source, '摘录出处'), sourceURL: sourceURL(banner.sourceURL)
+        });
     }
     return book;
 }
@@ -62,22 +72,30 @@ async function fetchJSON(url, fetcher) {
     } finally { clearTimeout(timeout); }
 }
 
-export async function loadLibrary(catalogURL = new URL('../../books/catalog.json', import.meta.url), fetcher = fetch) {
+export async function loadLibrary(catalogURL = new URL('../../books/catalog.json', import.meta.url), fetcher = fetch, onUpdate = () => {}) {
     const url = new URL(catalogURL);
     const catalog = await fetchJSON(url.href, fetcher);
     if (catalog.version !== 1 || !Array.isArray(catalog.books)) throw new Error('书架配置格式不正确');
     const seen = new Set();
-    const entries = await Promise.all(catalog.books.map(async entry => {
+    const entries = new Array(catalog.books.length);
+    const snapshot = () => ({
+        books: entries.filter(entry => entry && !entry.error),
+        errors: entries.filter(entry => entry?.error),
+        pending: catalog.books.filter((_, index) => !entries[index]).map(entry => entry?.id)
+    });
+    if (!catalog.books.length) onUpdate(snapshot());
+    await Promise.all(catalog.books.map(async (entry, index) => {
         const id = entry?.id;
-        if (typeof id !== 'string' || !idPattern.test(id) || seen.has(id)) return { id: String(id || ''), error: '书籍 ID 无效或重复' };
-        seen.add(id);
         try {
+            if (typeof id !== 'string' || !idPattern.test(id) || seen.has(id)) throw new Error('书籍 ID 无效或重复');
+            seen.add(id);
             const manifestURL = new URL(requireText(entry.manifest, '配置路径'), url);
             if (manifestURL.origin !== url.origin || !manifestURL.pathname.startsWith(new URL('.', url).pathname)) throw new Error('书籍配置必须位于 books 目录中');
-            return parseBook(await fetchJSON(manifestURL.href, fetcher), manifestURL, id);
-        } catch (error) { return { id, error: error.name === 'AbortError' ? '读取超时，请重试' : error.message }; }
+            entries[index] = parseBook(await fetchJSON(manifestURL.href, fetcher), manifestURL, id);
+        } catch (error) { entries[index] = { id: String(id || ''), error: error.name === 'AbortError' ? '读取超时，请重试' : error.message }; }
+        onUpdate(snapshot());
     }));
-    return { books: entries.filter(entry => !entry.error), errors: entries.filter(entry => entry.error) };
+    return snapshot();
 }
 
 export function adjacentTrack(book, trackId, direction) {

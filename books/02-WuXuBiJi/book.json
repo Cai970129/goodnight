@@ -3,9 +3,28 @@
   "title": "务虚笔记",
   "author": "史铁生",
   "category": "小说",
-  "description": "关于记忆、生命与爱情的长篇小说。第一章《写作之夜》分为三节收听。",
+  "description": "关于记忆、生命与爱情的长篇小说。",
   "cover": "images/cover.jpg",
-  "banners": [],
+  "banners": [
+    {
+      "image": "images/ditan-trees.jpg",
+      "quote": "“我是我的印象的一部分。”",
+      "source": "—— 史铁生《务虚笔记》· 写作之夜",
+      "sourceURL": "https://www.99csw.com/book/1626/43421.htm"
+    },
+    {
+      "image": "images/ditan-path.jpg",
+      "quote": "“我们在途中，我们在现在。”",
+      "source": "—— 史铁生《务虚笔记》· 写作之夜",
+      "sourceURL": "https://www.99csw.com/book/1626/43421.htm"
+    },
+    {
+      "image": "images/ditan-gate.jpg",
+      "quote": "“如烟如尘。”",
+      "source": "—— 史铁生《务虚笔记》· 写作之夜",
+      "sourceURL": "https://www.99csw.com/book/1626/43421.htm"
+    }
+  ],
   "pdf": "pdf/wu-xu-bi-ji.pdf",
   "chapters": [
     {

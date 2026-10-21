@@ -15,20 +15,20 @@ export const storage = new PreferencesStorage(backend, message => { storageWarni
 const ui = new UI({
     view: view => { ui.show(view); renderLibrary(); },
     book: id => { selectBook(id); ui.show('home'); },
-    track: id => selectTrack(id, true),
+    track: selectTrack,
     togglePlay: () => { if (!timer.check()) player.toggle(); },
     step: direction => stepTrack(direction),
     favorite: () => {
         if (!player.book) return;
         storage.toggleFavorite(player.book.id); ui.updateFavorite(player.book, storage); renderLibrary();
-        if (storageWarning) ui.notice(storageWarning, true);
+        showStorageWarning();
     },
     seek: ratio => player.seek(ratio * player.state.duration),
     filterBooks: renderLibrary,
     filterChapters: () => { ui.renderChapters(player.book); updatePlayback(); },
     settings: patch => {
         storage.setSettings(patch); applySettings();
-        if (storageWarning) ui.notice(storageWarning, true);
+        showStorageWarning();
     },
     timer: value => {
         if (value === 'track') timer.setTrackEnd();
@@ -40,39 +40,38 @@ const ui = new UI({
     clear: () => {
         player.pause(); timer.cancel(); storage.clear(); applySettings();
         ui.updateFavorite(player.book, storage); renderLibrary();
-        if (storageWarning) ui.notice(storageWarning, true);
+        showStorageWarning();
     }
 });
 
 function updatePlayback() { ui.updatePlayback(player); }
 function renderLibrary() { ui.renderLibrary(library.books, storage, player.book?.id, library.errors); }
 function applySettings() { player.setSpeed(storage.state.settings.speed); ui.updateSettings(storage.state.settings); }
+function showStorageWarning() { if (storageWarning) ui.notice(storageWarning, true); }
 
 function selectBook(id) {
     const book = library.books.find(entry => entry.id === id);
     if (!book || player.book?.id === id) return;
     player.select(book, book.tracks.find(track => track.src));
-    applySettings(); ui.renderBook(book, storage); updatePlayback(); renderLibrary();
+    ui.renderBook(book, storage); updatePlayback(); renderLibrary();
 }
 
-function selectTrack(id, autoplay = false) {
+function selectTrack(id) {
     const track = player.book?.tracks.find(entry => entry.id === id && entry.src);
     if (!track) return;
-    if (player.track?.id !== id) {
-        player.select(player.book, track); applySettings();
-    }
-    if (autoplay && !timer.check()) player.play();
+    if (player.track?.id !== id) player.select(player.book, track);
+    if (!timer.check()) player.play();
 }
 function stepTrack(direction) {
     const track = player.book && player.track && adjacentTrack(player.book, player.track.id, direction);
-    if (track) selectTrack(track.id, true);
+    if (track) selectTrack(track.id);
 }
 
 player.addEventListener('change', updatePlayback);
 player.addEventListener('ended', () => {
     const next = adjacentTrack(player.book, player.track.id, 1);
     if (timer.trackEnded(!next || next.chapterId !== player.track.chapterId)) return;
-    if (storage.state.settings.autoNext && next) selectTrack(next.id, true);
+    if (storage.state.settings.autoNext && next) selectTrack(next.id);
 });
 timer.addEventListener('change', () => ui.updateTimer(timer));
 timer.addEventListener('expire', () => player.pause());
@@ -93,22 +92,32 @@ function installMediaControls() {
     }
 }
 
+function updateLibrary(next) {
+    library = next;
+    const active = library.books.find(book => book.id === player.book?.id);
+    const current = active?.tracks.find(track => track.id === player.track?.id && track.src === player.track.src);
+    const settled = !next.pending.length;
+    const canSelect = !next.pending.includes(DEFAULT_BOOK_ID) && (next.books.length > 0 || settled);
+
+    if (active && current) {
+        if (player.book !== active) {
+            player.book = active; player.track = current;
+            ui.renderBook(active, storage); updatePlayback();
+        }
+    } else if ((!player.book || settled) && canSelect) {
+        const book = library.books.find(entry => entry.id === DEFAULT_BOOK_ID) || library.books[0];
+        player.select(null, null);
+        if (book) selectBook(book.id);
+        else { ui.renderBook(null, storage); ui.show('shelf'); }
+    }
+    ui.notice(storageWarning || '', !!storageWarning); renderLibrary();
+}
+
 async function initialize() {
     if (loading) return;
     loading = true; byId('retryLibraryBtn').disabled = true;
     try {
-        library = await loadLibrary();
-        const active = library.books.find(book => book.id === player.book?.id);
-        const current = active?.tracks.find(track => track.id === player.track?.id && track.src === player.track.src);
-        if (active && current) {
-            player.book = active; player.track = current; ui.renderBook(active, storage); updatePlayback();
-        } else {
-            const book = library.books.find(entry => entry.id === DEFAULT_BOOK_ID) || library.books[0];
-            player.select(null, null);
-            if (book) selectBook(book.id);
-            else { ui.renderBook(null, storage); ui.show('shelf'); }
-        }
-        ui.notice(storageWarning || '', !!storageWarning); renderLibrary();
+        await loadLibrary(undefined, undefined, updateLibrary);
     } catch (error) {
         library.errors = [{ id: '书架', error: error.name === 'AbortError' ? '加载超时，请重试' : error.message }];
         if (!player.book) { ui.renderBook(null, storage); player.status('书架加载失败，请在书架中重新加载。', true); }

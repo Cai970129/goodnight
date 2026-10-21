@@ -69,7 +69,11 @@ export class Player extends EventTarget {
         if (!this.track || this.audio.error || !Number.isFinite(time) || !Number.isFinite(this.audio.duration) || this.audio.duration <= 0) return;
         this.audio.currentTime = Math.max(0, Math.min(time, this.audio.duration)); this.emit();
     }
-    setSpeed(speed) { this.audio.playbackRate = speed; this.updateMediaPosition(); }
+    setSpeed(speed) {
+        this.audio.defaultPlaybackRate = speed;
+        this.audio.playbackRate = speed;
+        this.updateMediaPosition();
+    }
     get state() {
         const a = this.audio;
         return {

@@ -9,8 +9,13 @@ const text = (tag, content, className) => {
     if (className) element.className = className;
     return element;
 };
+const sourceLink = (label, url) => {
+    const link = text('a', label);
+    link.href = url; link.target = '_blank'; link.rel = 'noopener';
+    return link;
+};
 
-export function coverElement(book) {
+function coverElement(book) {
     const fallback = () => text('span', book.title, 'cover-fallback');
     if (!book.cover) return fallback();
     const image = document.createElement('img');
@@ -70,6 +75,8 @@ export class UI {
         byId('shelfTitle').textContent = view === 'favorites' ? '我的收藏' : '我的书架';
         byId('shelfDescription').textContent = view === 'favorites' ? '把喜欢的声音留在身边。' : '选一本书，听一段故事。';
         byId('mainContent').scrollTop = 0;
+        const heading = byId(view === 'home' ? 'mainContent' : view === 'settings' ? 'settingsTitle' : 'shelfTitle');
+        heading.focus({ preventScroll: true });
     }
     renderLibrary(books, storage, selectedId, errors = []) {
         const query = byId('bookSearch').value.trim().toLocaleLowerCase();
@@ -111,11 +118,9 @@ export class UI {
         byId('playerCoverContainer').replaceChildren(...(book ? [coverElement(book)] : []));
         byId('bookDetails').hidden = !book;
         byId('bookDescription').textContent = book?.description || '';
-        byId('pdfLinks').hidden = !book?.pdf;
-        for (const id of ['pdfOpen', 'pdfDownload']) {
-            if (book?.pdf) byId(id).href = book.pdf; else byId(id).removeAttribute('href');
-        }
-        if (book) byId('pdfDownload').download = `${book.title}.pdf`;
+        byId('pdfOpen').hidden = !book?.pdf;
+        if (book?.pdf) byId('pdfOpen').href = book.pdf;
+        else byId('pdfOpen').removeAttribute('href');
         this.renderBanner(book); this.updateFavorite(book, storage);
         this.renderChapters(book);
     }
@@ -128,7 +133,9 @@ export class UI {
         else img.removeAttribute('src');
         img.onerror = () => { img.hidden = true; };
         byId('bannerQuote').textContent = data?.quote || (book ? `今晚，翻开《${book.title}》` : '让故事陪你入眠。');
-        byId('bannerSource').textContent = data?.source || book?.author || '';
+        const source = byId('bannerSource'); source.replaceChildren();
+        if (data?.sourceURL) source.append(sourceLink(data.source, data.sourceURL));
+        else source.textContent = data?.source || book?.author || '';
         byId('bannerIndex').textContent = banners.length ? `${this.bannerIndex + 1} / ${banners.length}` : '';
         byId('nextBannerBtn').hidden = banners.length < 2;
     }
@@ -184,10 +191,8 @@ export class UI {
         byId('trackTimerBtn').disabled = !track;
         byId('chapterTimerBtn').disabled = !track;
         document.querySelectorAll('[data-track-id]').forEach(row => {
-            const selected = row.dataset.trackId === track?.id;
-            row.setAttribute('aria-current', String(selected));
-            const item = book?.tracks.find(entry => entry.id === row.dataset.trackId);
-            row.querySelector('.chapter-state').textContent = trackInfo(item);
+            const selected = String(row.dataset.trackId === track?.id);
+            if (row.getAttribute('aria-current') !== selected) row.setAttribute('aria-current', selected);
         });
     }
     updateSettings(settings) {
@@ -197,10 +202,12 @@ export class UI {
     }
     updateTimer(timer) {
         const remaining = timer.remaining();
-        byId('timerStatus').textContent = timer.mode === 'track' ? '当前节结束后停止' : timer.mode === 'chapter' ? '当前章结束后停止' : remaining !== null ? `剩余 ${formatTime(remaining)}` : '';
+        const status = timer.mode === 'track' ? '本节结束停止' : timer.mode === 'chapter' ? '本章结束停止' : remaining !== null ? `剩余 ${formatTime(remaining)}` : '';
+        if (byId('timerStatus').textContent !== status) byId('timerStatus').textContent = status;
         document.querySelectorAll('[data-minutes]').forEach(button => button.setAttribute('aria-pressed', String(timer.mode === 'time' && timer.selectedMinutes === Number(button.dataset.minutes))));
         byId('trackTimerBtn').setAttribute('aria-pressed', String(timer.mode === 'track'));
         byId('chapterTimerBtn').setAttribute('aria-pressed', String(timer.mode === 'chapter'));
         byId('cancelTimerBtn').disabled = !timer.mode;
+        byId('cancelTimerBtn').hidden = !timer.mode;
     }
 }
