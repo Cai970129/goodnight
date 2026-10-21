@@ -1,0 +1,47 @@
+{
+  "id": "02-WuXuBiJi",
+  "title": "务虚笔记",
+  "author": "史铁生",
+  "category": "小说",
+  "description": "关于记忆、生命与爱情的长篇小说。第一章《写作之夜》分为三节收听。",
+  "cover": "images/cover.jpg",
+  "banners": [],
+  "pdf": "pdf/wu-xu-bi-ji.pdf",
+  "chapters": [
+    {
+      "id": "chapter-01",
+      "title": "第一章 · 写作之夜",
+      "tracks": [
+        {
+          "id": "xie-zuo-zhi-ye-01",
+          "title": "第 1 节",
+          "src": "audio/01-XieZuoZhiYe/01.mp3",
+          "duration": 145.032
+        },
+        {
+          "id": "xie-zuo-zhi-ye-02",
+          "title": "第 2 节",
+          "src": "audio/01-XieZuoZhiYe/02.mp3",
+          "duration": 193.27
+        },
+        {
+          "id": "xie-zuo-zhi-ye-03",
+          "title": "第 3 节",
+          "src": "audio/01-XieZuoZhiYe/03.mp3",
+          "duration": 359.219
+        }
+      ]
+    },
+    {
+      "id": "chapter-02",
+      "title": "第二章 · 残疾与爱情",
+      "tracks": [
+        {
+          "id": "can-ji-yu-ai-qing-01",
+          "title": "朗读",
+          "src": null
+        }
+      ]
+    }
+  ]
+}

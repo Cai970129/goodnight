@@ -1,0 +1,50 @@
+{
+  "id": "01-MaoYu",
+  "title": "猫鱼",
+  "author": "陈冲",
+  "category": "散文",
+  "description": "在记忆与日常之间，听陈冲讲述她的生命故事。",
+  "cover": "images/cover.jpg",
+  "banners": [
+    {
+      "image": "images/cat-resting.jpg",
+      "quote": "“记忆,好像早晨爱人离别后枕头上柔软的凹印,那是他在你生命里存在过的证据”",
+      "source": "—— 陈冲《猫鱼》"
+    },
+    {
+      "image": "images/cat-held.jpg",
+      "quote": "“我们的头脑总是不停地把记忆里的碎片逻辑化、合理化、美化或丑化,而且每一次造访,都似乎令它离原始印象更远一些”",
+      "source": "—— 陈冲《猫鱼》"
+    },
+    {
+      "image": "images/cat-in-box.jpg",
+      "quote": "“也许,要保持原始的记忆,唯有不去触动它”",
+      "source": "—— 陈冲《猫鱼》"
+    }
+  ],
+  "pdf": null,
+  "chapters": [
+    {
+      "id": "preface",
+      "title": "前言",
+      "tracks": [
+        {
+          "id": "preface-01",
+          "title": "前言",
+          "src": "audio/00-preface.m4a"
+        }
+      ]
+    },
+    {
+      "id": "chapter-01",
+      "title": "第一章 · 平江路老房子",
+      "tracks": [
+        {
+          "id": "chapter-01-01",
+          "title": "朗读",
+          "src": null
+        }
+      ]
+    }
+  ]
+}

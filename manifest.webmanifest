@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Bedtime Reading · 睡前听书",
+  "short_name": "睡前听书",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f1e5",
+  "theme_color": "#f7f1e5",
+  "icons": [
+    {
+      "src": "./asserts/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

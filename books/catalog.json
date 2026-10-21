@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "books": [
+    {
+      "id": "01-MaoYu",
+      "manifest": "01-MaoYu/book.json"
+    },
+    {
+      "id": "02-WuXuBiJi",
+      "manifest": "02-WuXuBiJi/book.json"
+    }
+  ]
+}

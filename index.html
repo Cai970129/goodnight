@@ -1,350 +1,48 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bedtime Reading - 手机听书</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: #f7f1e5;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .font-handwriting {
-            font-family: 'Caveat', cursive;
-        }
-        /* 移动端拟物柔和卡片 */
-        .card-clay {
-            background: #fbf6ee;
-            box-shadow: 8px 8px 20px rgba(184, 163, 140, 0.2),   
-                       -8px -8px 20px rgba(255, 255, 255, 0.9);
-        }
-        .card-inset {
-            background: #f4ede2;
-            box-shadow: inset 2px 2px 5px rgba(190, 170, 148, 0.3),   
-                        inset -2px -2px 5px rgba(255, 255, 255, 0.8);
-        }
-        .card-pill {
-            background: #eee4d5;
-            box-shadow: 2px 2px 4px rgba(190, 170, 148, 0.2),   
-                       -2px -2px 4px rgba(255, 255, 255, 0.7);
-        }
-        /* 隐藏滚动条但可滑动 */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f7f1e5">
+    <meta name="application-version" content="1.0.0">
+    <meta name="description" content="你的声音，是我最好的晚安。一个可以定时收听的私人书架。">
+    <title>Bedtime Reading · 睡前听书</title>
+    <link rel="stylesheet" href="./asserts/css/main.css">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <script type="module" src="./asserts/js/app.js"></script>
 </head>
-<body class="min-h-screen flex items-center justify-center p-3 sm:p-6">
-
-    <!-- 手机外框容器 -->
-    <div class="w-full max-w-[430px] h-[860px] card-clay rounded-[40px] p-5 flex flex-col justify-between text-[#786351] relative overflow-hidden shadow-2xl border-4 border-[#eee4d5]">
-        
-        <!-- 手机顶部区域：状态栏与标题 -->
-        <div>
-            <!-- 顶部栏 -->
-            <div class="flex justify-between items-center mb-4 pt-1">
-                <div>
-                    <h1 class="text-2xl font-handwriting tracking-wide text-[#594636] font-bold leading-none">
-                        Bedtime Reading <span class="text-rose-400 text-lg">♡</span>
-                    </h1>
-                    <p class="text-[10px] text-[#9c8672] mt-1 font-medium">你的声音 · 是我最好的晚安</p>
-                </div>
-                <!-- 顶栏头像小组合 -->
-                <div class="flex items-center gap-1.5 bg-white/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] text-[#4a3a2c] shadow-sm">
-                    <div class="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[9px] font-bold">c</div>
-                    <div class="w-5 h-5 rounded-full bg-orange-200 flex items-center justify-center text-[9px] font-bold -ml-2">L</div>
-                </div>
+<body>
+<div class="app-shell">
+    <header class="app-header">
+        <div><h1>Bedtime Reading <span aria-hidden="true">♡</span></h1><p>你的声音 · 是我最好的晚安</p></div>
+    </header>
+    <p id="notice" class="notice" role="status" hidden></p>
+    <audio id="audioPlayer" preload="metadata"></audio>
+    <main id="mainContent" aria-label="听书内容" tabindex="-1">
+        <section id="homeView" aria-label="收听">
+            <div id="bannerPanel" class="banner">
+                <img id="bannerImg" alt="" hidden>
+                <div class="banner-shade"></div>
+                <div class="banner-top"><span>💌 字句予你</span><button id="nextBannerBtn" hidden>换一张 ↻</button></div>
+                <div class="banner-caption"><p id="bannerQuote">让故事陪你入眠。</p><div><span id="bannerSource"></span><span id="bannerIndex"></span></div></div>
             </div>
-
-            <!-- 插画与金句欣赏区域 -->
-            <div class="relative h-44 rounded-2xl overflow-hidden shadow-inner bg-[#decbb5] flex flex-col justify-between p-3.5 mb-4">
-                <!-- 背景插画图 -->
-                <img id="bannerImg" src="books/01-MaoYu/images/cat-resting.jpg"
-                     alt="治愈插画" 
-                     class="absolute inset-0 w-full h-full object-cover transition-all duration-500"/>
-                
-                <!-- 渐变阴影层 -->
-                <div class="absolute inset-0 bg-gradient-to-t from-[#594636]/80 via-[#594636]/20 to-black/20"></div>
-
-                <!-- 顶部：小标签与切换按钮 -->
-                <div class="relative z-10 flex justify-between items-center">
-                    <span class="text-[10px] bg-white/50 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[#4a3a2c] font-bold shadow-sm">
-                        💌字句予你
-                    </span>
-                    <button onclick="nextBanner()" class="text-[10px] bg-white/50 backdrop-blur-md px-2 py-0.5 rounded-full text-[#4a3a2c] hover:bg-white/70 transition shadow-sm font-medium">
-                        换一张 🔄
-                    </button>
-                </div>
-
-                <!-- 底部：金句与出处 -->
-                <div class="relative z-10 text-white drop-shadow">
-                    <p id="bannerQuote" class="text-xs font-medium leading-relaxed mb-0.5">
-                        “记忆，好像早晨爱人离别后枕头上柔软的凹印，那是他在你生命里存在过的证据”
-                    </p>
-                    <div class="flex justify-between items-center text-[10px] text-amber-200">
-                        <span id="bannerSource">—— 陈冲《猫鱼》</span>
-                        <span id="bannerIndex">1 / 3</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 手机中部滚动内容区 -->
-        <div class="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-0.5">
-            
-            <!-- 隐藏的音频播放源 -->
-            <audio id="audioPlayer" src="books/01-MaoYu/audio/00-preface.m4a" preload="metadata"></audio>
-
-            <!-- 核心播放器卡片 -->
-            <div class="card-inset p-4 rounded-2xl flex flex-col justify-between">
-                <!-- 顶部：封面与标题 -->
-                <div class="flex items-center gap-3">
-                    <img src="books/01-MaoYu/images/cover.jpg" alt="陈冲散文作品《猫鱼》封面" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-white/50 flex-shrink-0"/>
-                    <div class="min-w-0 flex-1">
-                        <h2 id="audioTitle" class="font-bold text-sm text-[#4a3a2c] truncate">《猫鱼》</h2>
-                        <p id="audioAuthor" class="text-[11px] text-[#9c8672] mt-0.5 truncate">我为你读 · 前言</p>
-                    </div>
-                </div>
-
-                <!-- 动态进度条区域 -->
-                <div class="my-3">
-                    <div class="flex justify-between text-[10px] text-[#9c8672] mb-1 font-medium">
-                        <span id="currentTime">00:00</span>
-                        <span id="durationTime">00:00</span>
-                    </div>
-                    <div id="progressBar" onclick="seekAudio(event)" class="w-full h-1.5 bg-[#e2d4c0] rounded-full overflow-hidden cursor-pointer relative">
-                        <div id="progressFill" class="w-[0%] h-full bg-[#c28e5d] rounded-full transition-all duration-100"></div>
-                    </div>
-                </div>
-
-                <!-- 控制按钮栏 -->
-                <div class="flex items-center justify-between px-3 text-[#6b5644]">
-                    <button class="text-sm hover:text-black">🔀</button>
-                    <button class="text-base hover:text-black">⏮</button>
-                    <button id="playBtn" onclick="togglePlay()" class="w-10 h-10 rounded-full bg-[#4a3a2c] text-white flex items-center justify-center shadow-md active:scale-95 transition">
-                        ▶
-                    </button>
-                    <button class="text-base hover:text-black">⏭</button>
-                    <button id="likeBtn" onclick="toggleLike()" class="text-sm text-[#9c8672] hover:text-rose-500 transition">♡</button>
-                </div>
-            </div>
-
-            <!-- 📜 章节选择列表卡片 -->
-            <div class="card-inset p-4 rounded-2xl space-y-2">
-                <h3 class="text-xs font-bold text-[#594636] mb-2 px-1">📜 章节选集</h3>
-                
-                <!-- 章节 1：前言 -->
-                <div onclick="switchTrack('books/01-MaoYu/audio/00-preface.m4a', '《猫鱼》', '我为你读 · 前言')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-xs text-[#c28e5d] font-bold">▶</span>
-                        <span class="text-xs font-bold text-[#4a3a2c]">前言</span>
-                    </div>
-                    <span class="text-[10px] text-[#9c8672]">朗读</span>
-                </div>
-
-                <!-- 章节 2：后续新章节占位 -->
-                <div onclick="switchTrack('books/01-MaoYu/audio/01-chapter.m4a', '《猫鱼》', '第一章 · 平江路老房子')" class="flex items-center justify-between p-2.5 rounded-xl bg-white/50 hover:bg-white/80 cursor-pointer transition shadow-sm">
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-xs text-[#c28e5d] font-bold">▶</span>
-                        <span class="text-xs font-bold text-[#4a3a2c]">第一章：平江路老房子</span>
-                    </div>
-                    <span class="text-[10px] text-[#9c8672]">待收听</span>
-                </div>
-            </div>
-
-            <!-- 睡眠定时器横向快捷栏 -->
-            <div class="card-inset p-3.5 rounded-2xl">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-[#4a3a2c] flex items-center gap-1">🌙 睡眠定时</span>
-                    <span class="text-[10px] text-[#9c8672]">时间到后自动停止</span>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setTimer(this)" class="timer-btn py-2 text-[11px] font-bold rounded-xl card-pill text-[#6b5644]">15分钟</button>
-                    <button onclick="setTimer(this)" class="timer-btn py-2 text-[11px] font-bold rounded-xl card-pill text-[#6b5644]">30分钟</button>
-                    <button onclick="setTimer(this)" class="timer-btn py-2 text-[11px] font-bold rounded-xl card-pill text-[#6b5644]">60分钟</button>
-                </div>
-            </div>
-
-            <!-- 书籍分类 -->
-            <div>
-                <h3 class="text-xs font-bold text-[#594636] mb-2.5 px-1">书籍分类</h3>
-                <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
-                    <div class="card-inset px-4 py-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 flex-shrink-0 min-w-[76px]">
-                        <span class="text-xl">🦋</span>
-                        <span class="text-[11px] font-bold text-[#6b5644]">文学小说</span>
-                    </div>
-                    <div class="card-inset px-4 py-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 flex-shrink-0 min-w-[76px]">
-                        <span class="text-xl">♟️</span>
-                        <span class="text-[11px] font-bold text-[#6b5644]">历史通史</span>
-                    </div>
-                    <div class="card-inset px-4 py-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 flex-shrink-0 min-w-[76px]">
-                        <span class="text-xl">🧩</span>
-                        <span class="text-[11px] font-bold text-[#6b5644]">认知思维</span>
-                    </div>
-                    <div class="card-inset px-4 py-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 flex-shrink-0 min-w-[76px]">
-                        <span class="text-xl">🥃</span>
-                        <span class="text-[11px] font-bold text-[#6b5644]">人物传记</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- 手机底部固定导航栏 -->
-        <div class="pt-2 border-t border-[#e8dccb] flex justify-around items-center text-[#9c8672]">
-            <a href="#" class="flex flex-col items-center gap-0.5 text-[#594636] font-bold">
-                <span class="text-base">🏠</span>
-                <span class="text-[10px]">首页</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 hover:text-[#594636] transition">
-                <span class="text-base">📖</span>
-                <span class="text-[10px]">书架</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 hover:text-[#594636] transition">
-                <span class="text-base">🎙️</span>
-                <span class="text-[10px]">声音</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 hover:text-[#594636] transition">
-                <span class="text-base">⭐</span>
-                <span class="text-[10px]">收藏</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 hover:text-[#594636] transition">
-                <span class="text-base">⚙️</span>
-                <span class="text-[10px]">设置</span>
-            </a>
-        </div>
-
-    </div>
-
-    <!-- 交互脚本 -->
-    <script>
-        // 睡眠定时器高亮切换
-        function setTimer(element) {
-            document.querySelectorAll('.timer-btn').forEach(btn => {
-                btn.classList.remove('bg-[#c28e5d]', 'text-white');
-            });
-            element.classList.add('bg-[#c28e5d]', 'text-white');
-        }
-
-        // 插画与金句轮播数据
-        const bannerData = [
-            {
-                img: "books/01-MaoYu/images/cat-resting.jpg",
-                quote: "“记忆,好像早晨爱人离别后枕头上柔软的凹印,那是他在你生命里存在过的证据”",
-                source: "—— 陈冲《猫鱼》"
-            },
-            {
-                img: "books/01-MaoYu/images/cat-held.jpg",
-                quote: "“我们的头脑总是不停地把记忆里的碎片逻辑化、合理化、美化或丑化,而且每一次造访,都似乎令它离原始印象更远一些”",
-                source: "—— 陈冲《猫鱼》"
-            },
-            {
-                img: "books/01-MaoYu/images/cat-in-box.jpg",
-                quote: "“也许,要保持原始的记忆,唯有不去触动它”",
-                source: "—— 陈冲《猫鱼》"
-            }
-        ];
-
-        let currentBannerIndex = 0;
-
-        function nextBanner() {
-            currentBannerIndex = (currentBannerIndex + 1) % bannerData.length;
-            const data = bannerData[currentBannerIndex];
-            
-            document.getElementById('bannerImg').src = data.img;
-            document.getElementById('bannerQuote').innerText = data.quote;
-            document.getElementById('bannerSource').innerText = data.source;
-            document.getElementById('bannerIndex').innerText = `${currentBannerIndex + 1} / ${bannerData.length}`;
-        }
-
-        // 播放器核心控制逻辑
-        const audio = document.getElementById('audioPlayer');
-        const playBtn = document.getElementById('playBtn');
-        const progressFill = document.getElementById('progressFill');
-        const progressBar = document.getElementById('progressBar');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationTimeEl = document.getElementById('durationTime');
-
-        let isPlaying = false;
-
-        // 1. 播放/暂停控制
-        function togglePlay() {
-            if (isPlaying) {
-                audio.pause();
-                playBtn.innerText = '▶';
-            } else {
-                audio.play();
-                playBtn.innerText = '⏸';
-            }
-            isPlaying = !isPlaying;
-        }
-
-        // 2. 格式化时间显示 (秒 -> 00:00)
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "00:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
-        // 3. 自动读取并显示音频总时长
-        audio.addEventListener('loadedmetadata', () => {
-            durationTimeEl.innerText = formatTime(audio.duration);
-        });
-
-        // 4. 实时更新播放进度条与播放时间
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-                const percent = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = percent + '%';
-                currentTimeEl.innerText = formatTime(audio.currentTime);
-            }
-        });
-
-        // 5. 播放结束复位
-        audio.addEventListener('ended', () => {
-            isPlaying = false;
-            playBtn.innerText = '▶';
-            progressFill.style.width = '0%';
-            currentTimeEl.innerText = '00:00';
-        });
-
-        // 6. 点击进度条跳转到任意播放位置
-        function seekAudio(event) {
-            if (!audio.duration) return;
-            const rect = progressBar.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const width = rect.width;
-            const percent = clickX / width;
-            audio.currentTime = percent * audio.duration;
-        }
-
-        // 7. 切换章节并自动播放
-        function switchTrack(audioSrc, title, subtitle) {
-            audio.src = audioSrc;
-            document.getElementById('audioTitle').innerText = title;
-            document.getElementById('audioAuthor').innerText = subtitle;
-            audio.play();
-            isPlaying = true;
-            playBtn.innerText = '⏸';
-        }
-
-        // 8. 爱心收藏切换
-        let isLiked = false;
-        function toggleLike() {
-            const likeBtn = document.getElementById('likeBtn');
-            isLiked = !isLiked;
-            likeBtn.innerText = isLiked ? '♥' : '♡';
-            likeBtn.style.color = isLiked ? '#e11d48' : '#9c8672';
-        }
-    </script>
+            <section class="player-panel surface" aria-label="音频播放器">
+                <div class="player-book"><div id="playerCoverContainer" class="player-cover"></div><div class="book-info"><h2 id="audioTitle">《猫鱼》</h2><p id="audioAuthor">陈冲 · 前言</p></div><button id="likeBtn" class="icon-btn" aria-label="收藏本书" aria-pressed="false" disabled>♡</button></div>
+                <div class="time-row"><span id="currentTime">00:00</span><span id="durationTime">00:00</span></div>
+                <input id="progressBar" type="range" min="0" max="1000" step="1" value="0" aria-label="播放进度" disabled>
+                <div class="player-controls"><label class="speed-label"><span class="sr-only">播放速度</span><select id="playerSpeed" aria-label="播放速度"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><button id="prevBtn" class="icon-btn" aria-label="上一节" disabled>⏮</button><button id="playBtn" class="play-btn" aria-label="播放" aria-pressed="false" disabled>▶</button><button id="nextBtn" class="icon-btn" aria-label="下一节" disabled>⏭</button><button id="switchBookBtn" class="text-btn">换书</button></div>
+                <p id="playerStatus" role="status" aria-live="polite" hidden></p>
+            </section>
+            <section class="chapter-panel surface" aria-labelledby="chapterTitle"><div class="section-heading"><h3 id="chapterTitle">章节目录</h3><span id="chapterCount"></span></div><label class="search-label"><span class="sr-only">筛选章节</span><input id="chapterSearch" type="search" placeholder="查找章节或分节" aria-label="筛选章节"></label><div id="chapterList"></div></section>
+            <section class="timer-panel surface" aria-labelledby="timerTitle"><div class="section-heading"><h3 id="timerTitle">🌙 睡眠定时</h3><span id="timerStatus" role="status"></span></div><div class="timer-options"><button data-minutes="15" aria-pressed="false">15 分钟</button><button data-minutes="30" aria-pressed="false">30 分钟</button><button id="trackTimerBtn" aria-pressed="false">当前节结束</button><button id="chapterTimerBtn" aria-pressed="false">当前章结束</button></div><div class="timer-actions"><button id="cancelTimerBtn" class="icon-btn" aria-label="取消定时" disabled>×</button></div></section>
+            <section id="bookDetails" class="book-details" hidden><h3>关于这本书</h3><p id="bookDescription"></p><div id="pdfLinks" class="resource-links" hidden><a id="pdfOpen" target="_blank" rel="noopener">打开 PDF</a><a id="pdfDownload" download>下载 PDF</a></div></section>
+        </section>
+        <section id="shelfView" hidden aria-labelledby="shelfTitle"><div class="view-heading"><h2 id="shelfTitle" tabindex="-1">我的书架</h2><p id="shelfDescription">选一本书，听一段故事。</p></div><label class="search-label"><span class="sr-only">搜索书名或作者</span><input id="bookSearch" type="search" placeholder="搜索书名或作者" aria-label="搜索书名或作者"></label><div id="categoryFilters" class="category-filters" aria-label="书籍分类"></div><div id="libraryErrors" class="library-errors" hidden></div><button id="retryLibraryBtn" class="secondary-btn" hidden>重新加载书架</button><div id="bookList"></div><p id="shelfEmpty" class="empty-state" hidden>还没有书籍。</p></section>
+        <section id="settingsView" hidden aria-labelledby="settingsTitle"><div class="view-heading"><h2 id="settingsTitle" tabindex="-1">收听设置</h2><p>让故事按你的节奏继续。</p></div><div class="setting-row"><label for="settingsSpeed">播放速度</label><select id="settingsSpeed"><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div><div class="setting-row"><label for="autoNext">自动播放下一节<small>按目录顺序收听，书末停止</small></label><input id="autoNext" type="checkbox" checked></div><div class="setting-row settings-clear"><div>清除收藏和设置<small>清除当前浏览器的收藏和收听设置</small></div><button id="clearRecordsBtn" class="text-btn">清除</button></div><p class="help">收藏和设置保存在当前浏览器中。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p></section>
+    </main>
+    <nav aria-label="主导航"><button id="homeNav" data-view="home" aria-current="page"><span aria-hidden="true">⌂</span>首页</button><button id="shelfNav" data-view="shelf"><span aria-hidden="true">▤</span>书架</button><button id="favoritesNav" data-view="favorites"><span aria-hidden="true">♡</span>收藏</button><button id="settingsNav" data-view="settings"><span aria-hidden="true">⚙</span>设置</button></nav>
+</div>
+<dialog id="clearDialog" aria-labelledby="clearDialogTitle"><h2 id="clearDialogTitle">清除收藏和设置？</h2><p>收藏和收听设置将被清除，书籍文件不受影响。</p><div class="dialog-actions"><button id="cancelClearBtn" class="secondary-btn">取消</button><button id="confirmClearBtn" class="primary-btn">确认清除</button></div></dialog>
+<noscript>请启用 JavaScript 后使用睡前听书。</noscript>
 </body>
 </html>
