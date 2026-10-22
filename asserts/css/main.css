@@ -13,6 +13,9 @@
     --space-md: 12px;
     --space-lg: 16px;
     --space-xl: 24px;
+    --control-size: 44px;
+    --play-size: 56px;
+    --speed-width: 88px;
     font-family: 'Noto Sans SC','Microsoft YaHei',system-ui,sans-serif;
     color: var(--ink);
     background: var(--paper);
@@ -334,14 +337,20 @@ main>section>*+* {
 }
 
 .icon-btn {
-    width: 44px;
-    height: 44px;
+    width: var(--control-size);
+    height: var(--control-size);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     border-radius: 50%;
     font-size: 19px;
+    padding: 0;
+}
+
+button svg {
+    display: block;
+    flex-shrink: 0;
 }
 
 .icon-btn:not(:disabled):hover {
@@ -366,42 +375,62 @@ main>section>*+* {
 }
 
 .player-controls {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5,minmax(0,1fr));
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-xs);
+    justify-items: center;
+    gap: 0;
     margin-top: var(--space-sm);
+    margin-inline: calc(-1 * var(--space-xs));
 }
 
 .play-btn {
-    height: 52px;
-    width: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--play-size);
+    width: var(--play-size);
+    padding: 0;
     border-radius: 50%;
     background: var(--ink);
     color: white;
-    font-size: 17px;
     flex-shrink: 0;
     box-shadow: 2px 2px 5px #4a3a2c35;
+}
+
+.play-btn .pause-symbol,
+.play-btn[data-playing=true] .play-symbol {
+    display: none;
+}
+
+.play-btn[data-playing=true] .pause-symbol {
+    display: inline;
+}
+
+.play-btn:not(:disabled):hover {
+    background: var(--accent);
 }
 
 .speed-label {
     position: relative;
     display: inline-flex;
     align-items: center;
-    width: 68px;
-    flex: 0 0 68px;
+    width: var(--speed-width);
+    min-width: 0;
+    height: var(--control-size);
+    flex-shrink: 0;
 }
 
 .speed-label::after {
     content: "";
     position: absolute;
     right: 4px;
-    top: 18px;
+    top: 50%;
     width: 6px;
     height: 6px;
     border-right: 1.5px solid var(--muted);
     border-bottom: 1.5px solid var(--muted);
-    transform: rotate(45deg);
+    transform: translateY(-70%) rotate(45deg);
     pointer-events: none;
 }
 
@@ -411,11 +440,11 @@ main>section>*+* {
     display: block;
     width: 100%;
     min-width: 0;
-    min-height: 44px;
+    height: 100%;
     margin: 0;
     border: 0;
     border-radius: 6px;
-    padding: 0 18px 0 0;
+    padding: 0 16px;
     background: transparent;
     color: var(--ink);
     font-family: inherit;
@@ -423,7 +452,21 @@ main>section>*+* {
     font-weight: 500;
     line-height: 1.25;
     font-variant-numeric: tabular-nums;
+    text-align: center;
+    text-align-last: center;
     cursor: pointer;
+}
+
+.player-controls .speed-label {
+    width: 100%;
+}
+
+.player-controls .speed-label::after {
+    display: none;
+}
+
+.player-controls .speed-select {
+    padding: 0;
 }
 
 .speed-select option {
@@ -453,6 +496,10 @@ main>section>*+* {
 
 #likeBtn[aria-pressed=true] {
     color: #b12f4d;
+}
+
+#likeBtn[aria-pressed=true] svg {
+    fill: currentColor;
 }
 
 .section-heading {
@@ -504,16 +551,23 @@ main>section>*+* {
 
 .chapter-row {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 12px minmax(0,1fr) auto;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-sm);
     text-align: left;
     padding: 11px 12px;
     min-height: 44px;
     border-radius: 10px;
     font-size: 12px;
     background: #fffcf5a8;
+}
+
+.chapter-row::before {
+    content: '';
+    width: 12px;
+    text-align: center;
+    line-height: 1;
 }
 
 .chapter-row+.chapter-row {
@@ -531,7 +585,6 @@ main>section>*+* {
 }
 
 .chapter-row .track-title {
-    flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
 }
@@ -584,12 +637,8 @@ main>section>*+* {
     font-variant-numeric: tabular-nums;
 }
 
-.timer-summary .icon-btn {
-    font-size: 22px;
-}
-
 .book-details {
-    padding: var(--space-sm) var(--space-xs) var(--space-md);
+    padding: var(--space-sm) var(--space-lg) var(--space-md);
 }
 
 .details-heading {
@@ -727,15 +776,24 @@ main>section>*+* {
 }
 
 .setting-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0,1fr) var(--speed-width);
     align-items: center;
-    justify-content: space-between;
     gap: 16px;
     min-height: 78px;
     padding: 16px 0;
     border-bottom: 1px solid var(--line);
     font-size: 13px;
     margin-top: 0!important;
+}
+
+.setting-row>input,
+.setting-row>.text-btn {
+    justify-self: center;
+}
+
+.setting-row>.text-btn {
+    min-height: var(--control-size);
 }
 
 .setting-row small {
@@ -747,17 +805,14 @@ main>section>*+* {
 .setting-row input[type=checkbox] {
     width: 20px;
     height: 20px;
+    margin: 0;
     accent-color: var(--accent);
     flex-shrink: 0;
 }
 
-.settings-clear>div {
-    flex: 1;
-}
-
 nav {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
     border-top: 1px solid var(--line);
     padding-top: 8px;
     flex-shrink: 0;
@@ -772,12 +827,8 @@ nav button {
     justify-content: center;
     gap: 3px;
     font-size: 10px;
+    line-height: 1.4;
     color: var(--muted);
-}
-
-nav button>span {
-    font-size: 21px;
-    line-height: 1;
 }
 
 nav button[aria-current=page] {
@@ -834,15 +885,11 @@ dialog p {
     .cl-mark {
         padding: 5px 7px;
     }
-    .player-controls {
-        gap: 0;
-    }
-    .play-btn {
-        width: 48px;
-        height: 48px;
-    }
     .surface {
         padding: 12px;
+    }
+    .book-details {
+        padding-inline: 12px;
     }
     .banner {
         padding: 14px;

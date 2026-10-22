@@ -49,7 +49,9 @@
                                 <h2 id="audioTitle">《猫鱼》</h2>
                                 <p id="audioAuthor">陈冲 · 前言</p>
                             </div>
-                            <button aria-label="收藏本书" aria-pressed="false" class="icon-btn" disabled id="likeBtn">♡</button>
+                            <button aria-label="收藏本书" aria-pressed="false" class="icon-btn" disabled id="likeBtn">
+                                <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"></path></svg>
+                            </button>
                         </div>
                         <div class="time-row">
                             <span id="currentTime">00:00</span>
@@ -72,7 +74,12 @@
                                     <path d="M6 5v14M18 5l-9 7 9 7Z"></path>
                                 </svg>
                             </button>
-                            <button aria-label="播放" aria-pressed="false" class="play-btn" disabled id="playBtn">▶</button>
+                            <button aria-label="播放" aria-pressed="false" class="play-btn" data-playing="false" disabled id="playBtn">
+                                <svg aria-hidden="true" fill="currentColor" height="32" viewBox="0 0 24 24" width="32">
+                                    <path class="play-symbol" d="M7 4 21 12 7 20Z"></path>
+                                    <g class="pause-symbol"><rect height="14" rx="1" width="4" x="6" y="5"></rect><rect height="14" rx="1" width="4" x="14" y="5"></rect></g>
+                                </svg>
+                            </button>
                             <button aria-label="下一节" class="icon-btn" disabled id="nextBtn">
                                 <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
                                     <path d="M18 5v14M6 5l9 7-9 7Z"></path>
@@ -99,7 +106,7 @@
                             <h3 id="timerTitle">🌙 睡眠定时</h3>
                             <div class="timer-summary">
                                 <span id="timerStatus"></span>
-                                <button aria-label="取消定时" class="icon-btn" disabled hidden id="cancelTimerBtn" title="取消定时">×</button>
+                                <button aria-label="取消定时" class="icon-btn" disabled hidden id="cancelTimerBtn" title="取消定时"><svg aria-hidden="true" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="1.6" viewBox="0 0 24 24" width="18"><path d="m6 6 12 12M6 18 18 6"></path></svg></button>
                             </div>
                         </div>
                         <div class="timer-options">
@@ -163,10 +170,10 @@
                 </section>
             </main>
             <nav aria-label="主导航">
-                <button aria-current="page" data-view="home" id="homeNav"><span aria-hidden="true">⌂</span>首页</button>
-                <button data-view="shelf" id="shelfNav"><span aria-hidden="true">▤</span>书架</button>
-                <button data-view="favorites" id="favoritesNav"><span aria-hidden="true">♡</span>收藏</button>
-                <button data-view="settings" id="settingsNav"><span aria-hidden="true">⚙</span>设置</button>
+                <button aria-current="page" data-view="home" id="homeNav"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"></path></svg>首页</button>
+                <button data-view="shelf" id="shelfNav"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3-1 4 15-3 1z"></path></svg>书架</button>
+                <button data-view="favorites" id="favoritesNav"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"></path></svg>收藏</button>
+                <button data-view="settings" id="settingsNav"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M3 6h6m4 0h8M3 12h10m4 0h4M3 18h3m4 0h11"></path><circle cx="11" cy="6" r="2"></circle><circle cx="15" cy="12" r="2"></circle><circle cx="8" cy="18" r="2"></circle></svg>设置</button>
             </nav>
         </div>
         <dialog aria-labelledby="clearDialogTitle" id="clearDialog">

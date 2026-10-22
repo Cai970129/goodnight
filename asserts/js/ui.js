@@ -167,7 +167,6 @@ export class UI {
     updateFavorite(book, storage) {
         const liked = !!book && storage.state.favorites.includes(book.id);
         byId('likeBtn').disabled = !book;
-        byId('likeBtn').textContent = liked ? '♥' : '♡';
         byId('likeBtn').setAttribute('aria-pressed', String(liked));
         byId('likeBtn').setAttribute('aria-label', liked ? '取消收藏本书' : '收藏本书');
     }
@@ -175,7 +174,7 @@ export class UI {
         const { book, track } = player, state = player.state;
         byId('audioAuthor').textContent = track ? `${book.author} · ${track.label}` : book ? `${book.author} · 音频待添加` : '请在书架中选择书籍';
         const button = byId('playBtn'); button.disabled = !track?.src;
-        button.textContent = state.playing || state.pending ? '⏸' : '▶';
+        button.dataset.playing = String(state.playing || state.pending);
         button.setAttribute('aria-pressed', String(state.playing));
         button.setAttribute('aria-label', state.pending ? '取消加载' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
         byId('playerStatus').hidden = !state.error || !state.message;
