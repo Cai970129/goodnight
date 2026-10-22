@@ -37,12 +37,12 @@
     },
     {
       "id": "chapter-01",
-      "title": "第一章 · 平江路老房子",
+      "title": "第一章 · 平江路的老房子",
       "tracks": [
         {
           "id": "chapter-01-01",
-          "title": "平江路老房子 上",
-          "src": 平江路
+          "title": "平江路的老房子 上",
+          "src": books/01-MaoYu/audio/平江路的老房子 上.m4a
         }
       ]
     }
