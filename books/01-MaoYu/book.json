@@ -58,8 +58,12 @@
           "id": "chapter-01-01",
           "title": "平江路的老房子 上",
           "src":"audio/平江路的老房子 上.m4a"
-        }
-      ]
+        },
+        {
+          "id": "chapter-01-02",
+          "title": "平江路的老房子 中",
+          "src":null
+          
     }
   ]
 }
