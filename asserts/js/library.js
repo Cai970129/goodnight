@@ -27,6 +27,7 @@ export function parseBook(data, manifestURL, expectedId) {
     if (!data || typeof data.id !== 'string' || data.id !== expectedId || !idPattern.test(data.id)) throw new Error('书籍 ID 不匹配');
     const book = {
         id: data.id, title: requireText(data.title, '书名'), author: requireText(data.author, '作者'),
+        narrator: data.narrator == null ? null : requireText(data.narrator, '朗读人'),
         description: typeof data.description === 'string' ? data.description : '',
         category: typeof data.category === 'string' ? data.category : '',
         cover: resolveResource(data.cover, manifestURL), pdf: resolveResource(data.pdf, manifestURL),

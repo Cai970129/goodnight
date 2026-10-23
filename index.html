@@ -74,11 +74,8 @@
                                     <path d="M6 5v14M18 5l-9 7 9 7Z"></path>
                                 </svg>
                             </button>
-                            <button aria-label="播放" aria-pressed="false" class="play-btn" data-playing="false" disabled id="playBtn">
-                                <svg aria-hidden="true" fill="currentColor" height="32" viewBox="0 0 24 24" width="32">
-                                    <path class="play-symbol" d="M7 4 21 12 7 20Z"></path>
-                                    <g class="pause-symbol"><rect height="14" rx="1" width="4" x="6" y="5"></rect><rect height="14" rx="1" width="4" x="14" y="5"></rect></g>
-                                </svg>
+                            <button aria-label="播放" aria-pressed="false" class="play-btn" disabled id="playBtn">
+                                <img alt="" aria-hidden="true" class="player-avatar" src="asserts/images/icon.svg" width="56" height="56" decoding="async">
                             </button>
                             <button aria-label="下一节" class="icon-btn" disabled id="nextBtn">
                                 <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
@@ -96,7 +93,7 @@
                     <section aria-labelledby="chapterTitle" class="chapter-panel surface">
                         <div class="section-heading">
                             <h3 id="chapterTitle">章节目录</h3>
-                            <span id="chapterCount"></span>
+                            <button class="text-btn" disabled id="toggleChaptersBtn">收起全部</button>
                         </div>
                         <label class="search-label"><span class="sr-only">筛选章节</span><input aria-label="筛选章节" id="chapterSearch" placeholder="查找章节或分节" type="search"></label>
                         <div id="chapterList"></div>
@@ -119,7 +116,7 @@
                     <section class="book-details" hidden id="bookDetails">
                         <div class="details-heading">
                             <h3>关于这本书</h3>
-                            <a class="pdf-link" hidden id="pdfOpen" rel="noopener" target="_blank">PDF 原文 <span aria-hidden="true">↗</span></a>
+                            <a class="pdf-link" hidden id="pdfOpen" rel="noopener" target="_blank">在线阅读 PDF</a>
                         </div>
                         <p id="bookDescription"></p>
                     </section>
@@ -157,7 +154,7 @@
                         <label for="autoNext">自动播放下一节<small>按目录顺序收听，书末停止</small></label>
                         <input checked id="autoNext" type="checkbox">
                     </div>
-                    <div class="setting-row settings-clear">
+                    <div class="setting-row">
                         <div>
                             清除收藏和设置
                             <small>
@@ -168,12 +165,28 @@
                     </div>
                     <p class="help">收藏和设置保存在当前浏览器中。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p>
                 </section>
+                <section aria-labelledby="readerTitle" hidden id="readerView">
+                    <div class="reader-heading">
+                        <button class="text-btn" id="readerBack">返回收听</button>
+                        <a class="pdf-link" id="readerExternal" target="_blank" rel="noopener">打开原文件 ↗</a>
+                    </div>
+                    <h2 id="readerTitle" tabindex="-1"></h2>
+                    <div aria-label="PDF 阅读控制" class="reader-controls">
+                        <button aria-label="上一页" id="pdfPrev" disabled>‹</button>
+                        <label class="pdf-page-label"><span class="sr-only">页码</span><input id="pdfPage" type="number" min="1" value="1" inputmode="numeric" disabled> / <span id="pdfPages">—</span></label>
+                        <button aria-label="下一页" id="pdfNext" disabled>›</button>
+                        <label><span class="sr-only">阅读缩放</span><select id="pdfZoom" disabled><option value="1">适合宽度</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select></label>
+                    </div>
+                    <div id="pdfError" class="library-errors" role="alert" hidden><p>PDF 暂时无法显示，请检查网络后重试，或打开原文件。</p><button class="text-btn" id="pdfRetry">重试</button></div>
+                    <p class="sr-only" id="pdfPageStatus" role="status"></p>
+                    <div class="pdf-stage" id="pdfStage" aria-busy="false"><div class="pdf-loading" id="pdfLoading" role="status" hidden><span class="sr-only">正在加载 PDF</span></div><div id="pdfCanvasHost"></div></div>
+                </section>
             </main>
             <section aria-label="当前收听" class="compact-player" hidden id="compactPlayer">
                 <div class="compact-player-row">
                     <button aria-label="返回收听页面" class="compact-book" id="returnToPlayerBtn"><strong id="compactBookTitle"></strong><span id="compactTrackTitle"></span></button>
-                    <button aria-label="播放" aria-pressed="false" class="play-btn compact-play-btn" data-playing="false" id="compactPlayBtn">
-                        <svg aria-hidden="true" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><path class="play-symbol" d="M7 4 21 12 7 20Z"></path><g class="pause-symbol"><rect height="14" rx="1" width="4" x="6" y="5"></rect><rect height="14" rx="1" width="4" x="14" y="5"></rect></g></svg>
+                    <button aria-label="播放" aria-pressed="false" class="play-btn compact-play-btn" id="compactPlayBtn">
+                                <img alt="" aria-hidden="true" class="player-avatar" src="asserts/images/icon.svg" width="56" height="56" decoding="async">
                     </button>
                 </div>
                 <p class="compact-player-status" hidden id="compactPlayerStatus" role="status"></p>

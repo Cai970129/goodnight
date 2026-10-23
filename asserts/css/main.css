@@ -392,23 +392,28 @@ button svg {
     width: var(--play-size);
     padding: 0;
     border-radius: 50%;
-    background: var(--ink);
-    color: white;
+    background: var(--surface);
     flex-shrink: 0;
     box-shadow: 2px 2px 5px #4a3a2c35;
 }
 
-.play-btn .pause-symbol,
-.play-btn[data-playing=true] .play-symbol {
-    display: none;
+.player-avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    pointer-events: none;
+    animation: avatar-turn 18s linear infinite;
+    animation-play-state: paused;
 }
 
-.play-btn[data-playing=true] .pause-symbol {
-    display: inline;
+.play-btn[aria-pressed=true] .player-avatar {
+    animation-play-state: running;
 }
 
-.play-btn:not(:disabled):hover {
-    background: var(--accent);
+@keyframes avatar-turn {
+    to { transform: rotate(360deg); }
 }
 
 .speed-label {
@@ -511,11 +516,6 @@ button svg {
     min-height: 28px;
 }
 
-.section-heading>span {
-    font-size: 10px;
-    color: var(--muted);
-}
-
 .search-label {
     display: block;
 }
@@ -544,9 +544,52 @@ button svg {
 }
 
 .chapter-group h4 {
-    margin: 0 0 8px;
+    margin: 0;
     font-size: 12px;
     line-height: 1.6;
+}
+
+.chapter-group>summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-height: var(--control-size);
+    cursor: pointer;
+    list-style: none;
+}
+
+.chapter-group>summary::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-group>summary::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin-right: var(--space-xs);
+    flex-shrink: 0;
+    border-right: 1.5px solid var(--muted);
+    border-bottom: 1.5px solid var(--muted);
+    transform: rotate(-45deg);
+}
+
+.chapter-group[open]>summary::after {
+    transform: rotate(45deg);
+}
+
+.chapter-group>summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.chapter-group[data-current=true]>summary h4 {
+    color: var(--accent);
+}
+
+.chapter-tracks {
+    padding-top: var(--space-xs);
 }
 
 .chapter-row {
@@ -792,10 +835,6 @@ button svg {
     justify-self: center;
 }
 
-.setting-row>.text-btn {
-    min-height: var(--control-size);
-}
-
 .setting-row small {
     display: block;
     margin-top: 5px;
@@ -973,4 +1012,89 @@ dialog p {
         transition: none!important;
         animation: none!important;
     }
+}
+
+.reader-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    margin-bottom: 8px;
+}
+.reader-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 8px 0;
+    margin-top: 12px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+}
+.reader-controls button {
+    min-width: var(--control-size);
+    min-height: var(--control-size);
+    font-size: 26px;
+}
+.pdf-page-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+.reader-controls input, .reader-controls select {
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    height: 44px;
+}
+.reader-controls input {
+    width: 48px;
+    padding: 4px;
+    text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+.reader-controls input::-webkit-inner-spin-button,
+.reader-controls input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.reader-controls select {
+    max-width: 102px;
+    padding: 4px;
+    font-size: 12px;
+}
+.pdf-stage {
+    position: relative;
+    min-height: 180px;
+    overflow-x: auto;
+    margin-top: 12px;
+}
+.pdf-stage canvas {
+    display: block;
+    background: white;
+}
+.pdf-stage[aria-busy="true"] canvas {
+    opacity: .4;
+}
+.pdf-loading {
+    position: absolute;
+    z-index: 1;
+    left: calc(50% - 12px);
+    top: 65px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--line);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: pdf-spin 1s linear infinite;
+}
+@keyframes pdf-spin {
+    to { transform: rotate(360deg); }
 }

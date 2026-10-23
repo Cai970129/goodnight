@@ -3,6 +3,7 @@ import { PreferencesStorage } from './storage.js';
 import { Player } from './player.js';
 import { SleepTimer } from './timer.js';
 import { UI, byId } from './ui.js';
+import { PDFReader } from './pdf-reader.js';
 
 const DEFAULT_BOOK_ID = '01-MaoYu';
 export const player = new Player(byId('audioPlayer'));
@@ -13,8 +14,9 @@ try { backend = localStorage; } catch { /* Storage access can be disabled. */ }
 export const storage = new PreferencesStorage(backend, message => { storageWarning = message; });
 
 const ui = new UI({
-    view: view => { ui.show(view); renderLibrary(); },
-    book: id => { selectBook(id); ui.show('home'); },
+    view: showView,
+    read: () => { if (player.book?.pdf) { reader.open(player.book); showView('reader'); } },
+    book: id => { selectBook(id); showView('home'); },
     track: selectTrack,
     togglePlay: () => { if (!timer.check()) player.toggle(); },
     step: direction => stepTrack(direction),
@@ -44,8 +46,17 @@ const ui = new UI({
     }
 });
 
+const reader = new PDFReader(() => { showView('home'); byId('pdfOpen').focus({ preventScroll: true }); });
+
+function showView(view) {
+    if (view !== 'reader') reader.close();
+    ui.show(view); renderLibrary();
+}
+
 function updatePlayback() { ui.updatePlayback(player); }
-function renderLibrary() { ui.renderLibrary(library.books, storage, player.book?.id, library.errors); }
+function renderLibrary() {
+    if (['shelf', 'favorites'].includes(ui.view)) ui.renderLibrary(library.books, storage, player.book?.id, library.errors);
+}
 function applySettings() { player.setSpeed(storage.state.settings.speed); ui.updateSettings(storage.state.settings); }
 function showStorageWarning() { if (storageWarning) ui.notice(storageWarning, true); }
 
@@ -53,7 +64,7 @@ function selectBook(id) {
     const book = library.books.find(entry => entry.id === id);
     if (!book || player.book?.id === id) return;
     player.select(book, book.tracks.find(track => track.src));
-    ui.renderBook(book, storage); updatePlayback(); renderLibrary();
+    ui.renderBook(book, storage); updatePlayback();
 }
 
 function selectTrack(id) {
@@ -106,7 +117,7 @@ function updateLibrary(next) {
         }
     } else if ((!player.book || settled) && canSelect) {
         const book = library.books.find(entry => entry.id === DEFAULT_BOOK_ID) || library.books[0];
-        player.select(null, null);
+        reader.close(); player.select(null, null);
         if (book) selectBook(book.id);
         else { ui.renderBook(null, storage); ui.show('shelf'); }
     }
@@ -121,7 +132,7 @@ async function initialize() {
     } catch (error) {
         library.errors = [{ id: '书架', error: error.name === 'AbortError' ? '加载超时，请重试' : error.message }];
         if (!player.book) { ui.renderBook(null, storage); player.status('书架加载失败，请在书架中重新加载。', true); }
-        ui.notice('书架加载失败，请检查网络后重试。', true); ui.show('shelf'); renderLibrary();
+        ui.notice('书架加载失败，请检查网络后重试。', true); showView('shelf');
     } finally { loading = false; byId('retryLibraryBtn').disabled = false; }
 }
 
