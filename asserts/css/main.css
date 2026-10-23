@@ -8,6 +8,7 @@
     --line: #dfd0bd;
     --accent: #8c5c36;
     --error: #a33131;
+    --heart: #bd4c66;
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 12px;
@@ -171,7 +172,7 @@ small {
 }
 
 .app-header h1 span {
-    color: #bd4c66;
+    color: var(--heart);
 }
 
 .app-header p {
@@ -385,6 +386,8 @@ button svg {
 }
 
 .play-btn {
+    touch-action: manipulation;
+    user-select: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -414,6 +417,26 @@ button svg {
 
 @keyframes avatar-turn {
     to { transform: rotate(360deg); }
+}
+
+.avatar-heart {
+    position: fixed;
+    z-index: 2;
+    pointer-events: none;
+    user-select: none;
+    color: var(--heart);
+    font-size: 42px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    text-shadow: 0 2px 4px #4a3a2c25;
+    animation: heart-pop 950ms ease-out both;
+}
+
+@keyframes heart-pop {
+    0% { opacity: 0; transform: translate(-50%, -30%) scale(.4); }
+    20% { opacity: 1; transform: translate(-50%, -90%) scale(1); }
+    65% { opacity: 1; transform: translate(-50%, -145%) scale(1.08); }
+    100% { opacity: 0; transform: translate(-50%, -210%) scale(1.08); }
 }
 
 .speed-label {

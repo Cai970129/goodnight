@@ -59,7 +59,12 @@ export class UI {
             }
             this.updateChapterToggle();
         });
-        for (const id of ['playBtn', 'compactPlayBtn']) byId(id).addEventListener('click', actions.togglePlay);
+        document.addEventListener('click', event => {
+            if (!this.playClickButton?.contains(event.target)) this.cancelPlayClick();
+        }, true);
+        for (const id of ['playBtn', 'compactPlayBtn']) {
+            byId(id).addEventListener('click', event => this.handlePlayClick(event, actions.togglePlay));
+        }
         byId('returnToPlayerBtn').addEventListener('click', () => actions.view('home'));
         byId('prevBtn').addEventListener('click', () => actions.step(-1));
         byId('nextBtn').addEventListener('click', () => actions.step(1));
@@ -78,11 +83,39 @@ export class UI {
         byId('cancelClearBtn').addEventListener('click', () => byId('clearDialog').close());
         byId('confirmClearBtn').addEventListener('click', () => { byId('clearDialog').close(); actions.clear(); });
     }
+    cancelPlayClick() {
+        clearTimeout(this.playClickTimer);
+        this.playClickTimer = null; this.playClicks = 0; this.playClickButton = null;
+    }
+    handlePlayClick(event, togglePlay) {
+        const button = event.currentTarget;
+        if (event.detail === 0) { this.cancelPlayClick(); togglePlay(); return; }
+        clearTimeout(this.playClickTimer);
+        this.playClickButton = button;
+        this.playClicks = (this.playClicks || 0) + 1;
+        if (this.playClicks === 2) this.showHeart(button);
+        this.playClickTimer = setTimeout(() => {
+            const single = this.playClicks === 1;
+            this.cancelPlayClick();
+            if (single && !button.disabled) togglePlay();
+        }, 300);
+    }
+    showHeart(button) {
+        clearTimeout(this.heartTimer); this.heart?.remove();
+        const heart = text('span', '♥', 'avatar-heart');
+        const bounds = button.getBoundingClientRect();
+        heart.setAttribute('aria-hidden', 'true');
+        heart.style.left = `${bounds.left + bounds.width / 2}px`;
+        heart.style.top = `${bounds.top + bounds.height / 2}px`;
+        document.body.append(heart); this.heart = heart;
+        this.heartTimer = setTimeout(() => { heart.remove(); this.heart = null; }, 1000);
+    }
     notice(message, error = false) {
         byId('notice').hidden = !message; byId('notice').textContent = message || '';
         byId('notice').dataset.error = String(error);
     }
     show(view) {
+        this.cancelPlayClick(); this.heart?.remove();
         this.view = view;
         byId('homeView').hidden = view !== 'home';
         byId('shelfView').hidden = !['shelf', 'favorites'].includes(view);
@@ -139,7 +172,7 @@ export class UI {
     renderBook(book, storage) {
         const changed = this.book?.id !== book?.id;
         this.book = book;
-        if (changed) { this.bannerIndex = 0; byId('chapterSearch').value = ''; }
+        if (changed) { this.cancelPlayClick(); this.heart?.remove(); this.bannerIndex = 0; byId('chapterSearch').value = ''; }
         const avatar = new URL(`../images/${narratorAvatars.get(book?.narrator) || 'icon.svg'}`, import.meta.url).href;
         for (const image of document.querySelectorAll('.player-avatar')) {
             if (image.src !== avatar) {

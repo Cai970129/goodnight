@@ -85,7 +85,7 @@ player.addEventListener('ended', () => {
     if (storage.state.settings.autoNext && next) selectTrack(next.id);
 });
 timer.addEventListener('change', () => ui.updateTimer(timer));
-timer.addEventListener('expire', () => player.pause());
+timer.addEventListener('expire', () => { ui.cancelPlayClick(); player.pause(); });
 document.addEventListener('visibilitychange', () => timer.check());
 window.addEventListener('pageshow', () => timer.check());
 
