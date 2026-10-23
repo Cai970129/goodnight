@@ -38,7 +38,7 @@ const ui = new UI({
     },
     retry: initialize,
     clear: () => {
-        player.pause(); timer.cancel(); storage.clear(); applySettings();
+        storage.clear(); applySettings();
         ui.updateFavorite(player.book, storage); renderLibrary();
         showStorageWarning();
     }

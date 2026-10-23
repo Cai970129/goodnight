@@ -169,6 +169,15 @@
                     <p class="help">收藏和设置保存在当前浏览器中。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p>
                 </section>
             </main>
+            <section aria-label="当前收听" class="compact-player" hidden id="compactPlayer">
+                <div class="compact-player-row">
+                    <button aria-label="返回收听页面" class="compact-book" id="returnToPlayerBtn"><strong id="compactBookTitle"></strong><span id="compactTrackTitle"></span></button>
+                    <button aria-label="播放" aria-pressed="false" class="play-btn compact-play-btn" data-playing="false" id="compactPlayBtn">
+                        <svg aria-hidden="true" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><path class="play-symbol" d="M7 4 21 12 7 20Z"></path><g class="pause-symbol"><rect height="14" rx="1" width="4" x="6" y="5"></rect><rect height="14" rx="1" width="4" x="14" y="5"></rect></g></svg>
+                    </button>
+                </div>
+                <p class="compact-player-status" hidden id="compactPlayerStatus" role="status"></p>
+            </section>
             <nav aria-label="主导航">
                 <button aria-current="page" data-view="home" id="homeNav"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"></path></svg>首页</button>
                 <button data-view="shelf" id="shelfNav"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3-1 4 15-3 1z"></path></svg>书架</button>

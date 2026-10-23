@@ -46,7 +46,8 @@
         {
           "id": "preface-01",
           "title": "前言",
-          "src": "audio/00-preface.m4a"
+          "src": "audio/00-preface.m4a",
+          "duration": 162.58
         }
       ]
     },
@@ -57,15 +58,15 @@
         {
           "id": "chapter-01-01",
           "title": "平江路的老房子 上",
-          "src":"audio/平江路的老房子 上.m4a"
+          "src": "audio/平江路的老房子 上.m4a",
+          "duration": 652.779
         },
         {
           "id": "chapter-01-02",
           "title": "平江路的老房子 中",
-          "src":null
-          
+          "src": null
+        }
+      ]
     }
   ]
- }
-]
 }

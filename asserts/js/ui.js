@@ -15,18 +15,20 @@ const sourceLink = (label, url) => {
     return link;
 };
 
-function coverElement(book) {
+function coverElement(book, lazy = false) {
     const fallback = () => text('span', book.title, 'cover-fallback');
     if (!book.cover) return fallback();
     const image = document.createElement('img');
-    image.src = book.cover; image.alt = `《${book.title}》封面`;
+    image.loading = lazy ? 'lazy' : 'eager'; image.decoding = 'async';
+    image.alt = `《${book.title}》封面`;
     image.addEventListener('error', () => image.replaceWith(fallback()), { once: true });
+    image.src = book.cover;
     return image;
 }
 
 export class UI {
     constructor(actions) {
-        this.view = 'home'; this.category = ''; this.bannerIndex = 0;
+        this.view = 'home'; this.category = ''; this.bannerIndex = 0; this.hasTrack = false;
         document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => actions.view(button.dataset.view)));
         byId('bookList').addEventListener('click', event => {
             const button = event.target.closest('[data-book-id]');
@@ -42,7 +44,8 @@ export class UI {
         });
         byId('bookSearch').addEventListener('input', () => actions.filterBooks());
         byId('chapterSearch').addEventListener('input', () => actions.filterChapters());
-        byId('playBtn').addEventListener('click', actions.togglePlay);
+        for (const id of ['playBtn', 'compactPlayBtn']) byId(id).addEventListener('click', actions.togglePlay);
+        byId('returnToPlayerBtn').addEventListener('click', () => actions.view('home'));
         byId('prevBtn').addEventListener('click', () => actions.step(-1));
         byId('nextBtn').addEventListener('click', () => actions.step(1));
         byId('likeBtn').addEventListener('click', actions.favorite);
@@ -69,6 +72,7 @@ export class UI {
         byId('homeView').hidden = view !== 'home';
         byId('shelfView').hidden = !['shelf', 'favorites'].includes(view);
         byId('settingsView').hidden = view !== 'settings';
+        byId('compactPlayer').hidden = view === 'home' || !this.hasTrack;
         document.querySelectorAll('[data-view]').forEach(button => {
             if (button.dataset.view === view) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
         });
@@ -79,6 +83,8 @@ export class UI {
         heading.focus({ preventScroll: true });
     }
     renderLibrary(books, storage, selectedId, errors = []) {
+        const focusedCategory = document.activeElement?.closest('[data-category]')?.dataset.category;
+        const focusedBook = document.activeElement?.closest('[data-book-id]')?.dataset.bookId;
         const query = byId('bookSearch').value.trim().toLocaleLowerCase();
         const favorites = storage.state.favorites;
         const source = this.view === 'favorites' ? books.filter(book => favorites.includes(book.id)) : books;
@@ -95,7 +101,7 @@ export class UI {
             const row = document.createElement('button'); row.className = 'book-row'; row.dataset.bookId = book.id;
             row.setAttribute('aria-label', `选择《${book.title}》`);
             row.setAttribute('aria-current', String(book.id === selectedId));
-            const cover = document.createElement('span'); cover.className = 'book-cover'; cover.append(coverElement(book));
+            const cover = document.createElement('span'); cover.className = 'book-cover'; cover.append(coverElement(book, true));
             const info = document.createElement('span'); info.className = 'book-row-info';
             info.append(text('strong', `《${book.title}》`));
             const available = book.tracks.filter(track => track.src);
@@ -109,6 +115,10 @@ export class UI {
         byId('libraryErrors').hidden = !errors.length;
         byId('libraryErrors').replaceChildren(...errors.map(entry => text('p', `${entry.id || '书架'}：${entry.error}`)));
         byId('retryLibraryBtn').hidden = !errors.length;
+        const focusTarget = focusedCategory !== undefined
+            ? [...filters.querySelectorAll('[data-category]')].find(button => button.dataset.category === focusedCategory)
+            : focusedBook ? [...list.querySelectorAll('[data-book-id]')].find(button => button.dataset.bookId === focusedBook) : null;
+        focusTarget?.focus({ preventScroll: true });
     }
     renderBook(book, storage) {
         const changed = this.book?.id !== book?.id;
@@ -172,11 +182,19 @@ export class UI {
     }
     updatePlayback(player) {
         const { book, track } = player, state = player.state;
+        this.hasTrack = !!track?.src;
+        byId('compactPlayer').hidden = this.view === 'home' || !this.hasTrack;
+        byId('compactBookTitle').textContent = book ? `《${book.title}》` : '';
+        byId('compactTrackTitle').textContent = track?.label || '';
         byId('audioAuthor').textContent = track ? `${book.author} · ${track.label}` : book ? `${book.author} · 音频待添加` : '请在书架中选择书籍';
-        const button = byId('playBtn'); button.disabled = !track?.src;
-        button.dataset.playing = String(state.playing || state.pending);
-        button.setAttribute('aria-pressed', String(state.playing));
-        button.setAttribute('aria-label', state.pending ? '取消加载' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
+        for (const id of ['playBtn', 'compactPlayBtn']) {
+            const button = byId(id); button.disabled = !track?.src;
+            button.dataset.playing = String(state.playing || state.pending);
+            button.setAttribute('aria-pressed', String(state.playing));
+            button.setAttribute('aria-label', state.pending ? '取消加载' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
+        }
+        byId('compactPlayerStatus').hidden = !state.error || !state.message;
+        byId('compactPlayerStatus').textContent = state.error ? state.message : '';
         byId('playerStatus').hidden = !state.error || !state.message;
         byId('playerStatus').textContent = state.error ? state.message : '';
         byId('playerStatus').dataset.error = String(state.error);
@@ -200,6 +218,8 @@ export class UI {
         byId('autoNext').checked = settings.autoNext;
     }
     updateTimer(timer) {
+        const cancelFocused = document.activeElement === byId('cancelTimerBtn');
+        if (timer.mode) this.timerFocusTarget = timer.mode === 'track' ? byId('trackTimerBtn') : timer.mode === 'chapter' ? byId('chapterTimerBtn') : document.querySelector(`[data-minutes="${timer.selectedMinutes}"]`);
         const remaining = timer.remaining();
         const status = timer.mode === 'track' ? '本节结束停止' : timer.mode === 'chapter' ? '本章结束停止' : remaining !== null ? `剩余 ${formatTime(remaining)}` : '';
         if (byId('timerStatus').textContent !== status) byId('timerStatus').textContent = status;
@@ -208,5 +228,9 @@ export class UI {
         byId('chapterTimerBtn').setAttribute('aria-pressed', String(timer.mode === 'chapter'));
         byId('cancelTimerBtn').disabled = !timer.mode;
         byId('cancelTimerBtn').hidden = !timer.mode;
+        if (!timer.mode && cancelFocused) {
+            const target = this.timerFocusTarget;
+            (target && !target.disabled ? target : document.querySelector('[data-minutes="15"]')).focus({ preventScroll: true });
+        }
     }
 }
