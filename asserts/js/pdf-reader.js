@@ -56,7 +56,6 @@ export class PDFReader {
         this.close(); this.book = book; this.page = page;
         const generation = this.generation;
         byId('readerTitle').textContent = `《${book.title}》`;
-        byId('readerExternal').href = book.pdf;
         byId('pdfPages').textContent = '—'; byId('pdfPage').value = page;
         byId('pdfZoom').value = zoom; byId('pdfError').hidden = true;
         byId('pdfPageStatus').textContent = ''; this.busy(true);

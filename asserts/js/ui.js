@@ -44,10 +44,6 @@ export class UI {
             const button = event.target.closest('[data-category]');
             if (button) { this.category = button.dataset.category; actions.filterBooks(); }
         });
-        byId('pdfOpen').addEventListener('click', event => {
-            if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-            event.preventDefault(); actions.read();
-        });
         byId('bookSearch').addEventListener('input', () => actions.filterBooks());
         byId('chapterSearch').addEventListener('input', () => actions.filterChapters());
         byId('toggleChaptersBtn').addEventListener('click', () => {
@@ -69,6 +65,7 @@ export class UI {
         byId('prevBtn').addEventListener('click', () => actions.step(-1));
         byId('nextBtn').addEventListener('click', () => actions.step(1));
         byId('likeBtn').addEventListener('click', actions.favorite);
+        byId('readChapterBtn').addEventListener('click', actions.read);
         byId('switchBookBtn').addEventListener('click', () => actions.view('shelf'));
         byId('progressBar').addEventListener('input', event => actions.seek(Number(event.target.value) / 1000));
         for (const id of ['playerSpeed', 'settingsSpeed']) byId(id).addEventListener('change', event => actions.settings({ speed: Number(event.target.value) }));
@@ -184,9 +181,6 @@ export class UI {
         byId('playerCoverContainer').replaceChildren(...(book ? [coverElement(book)] : []));
         byId('bookDetails').hidden = !book;
         byId('bookDescription').textContent = book?.description || '';
-        byId('pdfOpen').hidden = !book?.pdf;
-        if (book?.pdf) byId('pdfOpen').href = book.pdf;
-        else byId('pdfOpen').removeAttribute('href');
         this.renderBanner(book); this.updateFavorite(book, storage);
         this.renderChapters(book);
     }
@@ -203,6 +197,7 @@ export class UI {
         if (data?.sourceURL) source.append(sourceLink(data.source, data.sourceURL));
         else source.textContent = data?.source || book?.author || '';
         byId('bannerIndex').textContent = banners.length ? `${this.bannerIndex + 1} / ${banners.length}` : '';
+        byId('nextBannerBtn').textContent = new Set(banners.map(banner => banner.image)).size === 1 ? '换一句 ↻' : '换一张 ↻';
         byId('nextBannerBtn').hidden = banners.length < 2;
     }
     renderChapters(book) {
@@ -214,7 +209,7 @@ export class UI {
         if (!book) return;
         for (const chapter of book.chapters) {
             const tracks = chapter.tracks.filter(track => `${chapter.title} ${track.title}`.toLocaleLowerCase().includes(query));
-            if (!tracks.length && query) continue;
+            if (!tracks.length && query && !chapter.title.toLocaleLowerCase().includes(query)) continue;
             const group = document.createElement('details'); group.className = 'chapter-group'; group.dataset.chapterId = chapter.id;
             const key = `${book.id}:${chapter.id}`;
             group.open = !!query || this.chapterStates.get(key) !== false;
@@ -252,6 +247,10 @@ export class UI {
     updatePlayback(player) {
         const { book, track } = player, state = player.state;
         this.hasTrack = !!track?.src;
+        const chapter = book?.chapters.find(entry => entry.id === track?.chapterId);
+        const canRead = !!(book?.pdf && chapter?.pdfPage);
+        byId('readChapterBtn').disabled = !canRead;
+        byId('readChapterBtn').title = canRead ? `阅读 ${chapter.title}` : '本章暂无 PDF';
         byId('compactPlayer').hidden = this.view === 'home' || !this.hasTrack;
         byId('compactBookTitle').textContent = book ? `《${book.title}》` : '';
         byId('compactTrackTitle').textContent = track?.label || '';

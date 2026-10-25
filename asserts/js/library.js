@@ -38,7 +38,8 @@ export function parseBook(data, manifestURL, expectedId) {
     for (const entry of data.chapters) {
         if (!entry || typeof entry.id !== 'string' || !idPattern.test(entry.id) || chapterIds.has(entry.id)) throw new Error('章节 ID 无效或重复');
         chapterIds.add(entry.id);
-        const chapter = { id: entry.id, title: requireText(entry.title, '章节名称'), tracks: [] };
+        if (entry.pdfPage != null && (!Number.isInteger(entry.pdfPage) || entry.pdfPage < 1)) throw new Error('章节 PDF 页码必须为正整数');
+        const chapter = { id: entry.id, title: requireText(entry.title, '章节名称'), pdfPage: entry.pdfPage ?? null, tracks: [] };
         if (!Array.isArray(entry.tracks)) throw new Error('分节配置必须为数组');
         for (const item of entry.tracks) {
             if (!item || typeof item.id !== 'string' || !idPattern.test(item.id) || trackIds.has(item.id)) throw new Error('分节 ID 无效或重复');

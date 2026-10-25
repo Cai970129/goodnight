@@ -4,3 +4,5 @@ node_modules/
 /.agents/
 /.aws/
 /.codex/
+__pycache__/
+*.pyc

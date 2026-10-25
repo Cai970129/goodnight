@@ -1,7 +1,5 @@
 # 配图来源
 
-以下照片来自 Wikimedia Commons，按 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 使用。下载的是 960px 缩略版本，未进一步修改图片文件；网页通过 object-fit 适配展示。许可仅适用于对应照片。
+- `ginkgo.jpg`：秋日银杏叶，摄影 [Erdbaer](https://commons.wikimedia.org/wiki/User:Erdbaer)，来自 [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ginkgo_biloba_leaves_in_fall_color.jpg)，采用 [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) 许可。使用 960px 缩略图，网页通过 `object-fit` 适配展示。
 
-- `ditan-trees.jpg`：[Steven Sun](https://commons.wikimedia.org/wiki/File:地坛公园_余华和史铁生的树_20251025.jpg)，CC BY-SA 4.0。
-- `ditan-path.jpg`：[Another Believer](https://commons.wikimedia.org/wiki/File:Beijing_(November_2016)_-_170.jpg)，CC BY-SA 4.0。
-- `ditan-gate.jpg`：[Another Believer](https://commons.wikimedia.org/wiki/File:Beijing_(November_2016)_-_166.jpg)，CC BY-SA 4.0。
+两段摘录共用同一张银杏照片，文字按提供内容录入。

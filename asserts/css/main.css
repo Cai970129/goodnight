@@ -707,21 +707,10 @@ button svg {
     padding: var(--space-sm) var(--space-lg) var(--space-md);
 }
 
-.details-heading {
+.book-details>h3 {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-md);
     min-height: 44px;
-}
-
-.pdf-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    min-height: 44px;
-    font-size: 12px;
-    white-space: nowrap;
 }
 
 .book-details>p {

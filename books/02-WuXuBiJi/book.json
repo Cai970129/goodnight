@@ -8,22 +8,14 @@
   "cover": "images/cover.jpg",
   "banners": [
     {
-      "image": "images/ditan-trees.jpg",
-      "quote": "“我是我的印象的一部分。”",
-      "source": "—— 史铁生《务虚笔记》· 写作之夜",
-      "sourceURL": "https://www.99csw.com/book/1626/43421.htm"
+      "image": "images/ginkgo.jpg",
+      "quote": "在还没有你的时候，这个世界已经存在了很久————这不过是在有了我的时候我所听到的一个传说。在没有你的时候这个世界还要存在很久————这不过是在还有我的时候我被要求接收的一种猜想",
+      "source": "—— 史铁生《务虚笔记》"
     },
     {
-      "image": "images/ditan-path.jpg",
-      "quote": "“我们在途中，我们在现在。”",
-      "source": "—— 史铁生《务虚笔记》· 写作之夜",
-      "sourceURL": "https://www.99csw.com/book/1626/43421.htm"
-    },
-    {
-      "image": "images/ditan-gate.jpg",
-      "quote": "“如烟如尘。”",
-      "source": "—— 史铁生《务虚笔记》· 写作之夜",
-      "sourceURL": "https://www.99csw.com/book/1626/43421.htm"
+      "image": "images/ginkgo.jpg",
+      "quote": "我站在今天设想过去又幻想未来，过去和未来在今天随意交叉，因而过去和未来都在刮着现在的风",
+      "source": "—— 史铁生《务虚笔记》"
     }
   ],
   "pdf": "pdf/wu-xu-bi-ji.pdf",
@@ -68,7 +60,8 @@
           "src": "audio/01-XieZuoZhiYe/06.mp3",
           "duration": 214.536
         }
-      ]
+      ],
+      "pdfPage": 19
     },
     {
       "id": "chapter-02",
@@ -76,10 +69,42 @@
       "tracks": [
         {
           "id": "can-ji-yu-ai-qing-01",
-          "title": "朗读",
-          "src": null
+          "title": "第 1 节",
+          "src": "audio/02-CanJiYuAiQing/01.mp3",
+          "duration": 138.072
+        },
+        {
+          "id": "can-ji-yu-ai-qing-02",
+          "title": "第 2 节",
+          "src": "audio/02-CanJiYuAiQing/02.mp3",
+          "duration": 275.736
+        },
+        {
+          "id": "can-ji-yu-ai-qing-03",
+          "title": "第 3 节",
+          "src": "audio/02-CanJiYuAiQing/03.mp3",
+          "duration": 328.776
+        },
+        {
+          "id": "can-ji-yu-ai-qing-04",
+          "title": "第 4 节",
+          "src": "audio/02-CanJiYuAiQing/04.mp3",
+          "duration": 407.016
+        },
+        {
+          "id": "can-ji-yu-ai-qing-05",
+          "title": "第 5 节",
+          "src": "audio/02-CanJiYuAiQing/05.mp3",
+          "duration": 206.76
+        },
+        {
+          "id": "can-ji-yu-ai-qing-06",
+          "title": "第 6 节",
+          "src": "audio/02-CanJiYuAiQing/06.mp3",
+          "duration": 68.448
         }
-      ]
+      ],
+      "pdfPage": 31
     }
   ]
 }

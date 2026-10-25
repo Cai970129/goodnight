@@ -15,7 +15,11 @@ export const storage = new PreferencesStorage(backend, message => { storageWarni
 
 const ui = new UI({
     view: showView,
-    read: () => { if (player.book?.pdf) { reader.open(player.book); showView('reader'); } },
+    read: () => {
+        const chapter = player.book?.chapters.find(entry => entry.id === player.track?.chapterId);
+        if (!player.book?.pdf || !chapter?.pdfPage) return;
+        reader.open(player.book, chapter.pdfPage); showView('reader');
+    },
     book: id => { selectBook(id); showView('home'); },
     track: selectTrack,
     togglePlay: () => { if (!timer.check()) player.toggle(); },
@@ -46,7 +50,10 @@ const ui = new UI({
     }
 });
 
-const reader = new PDFReader(() => { showView('home'); byId('pdfOpen').focus({ preventScroll: true }); });
+const reader = new PDFReader(() => {
+    showView('home');
+    byId('readChapterBtn').focus({ preventScroll: true });
+});
 
 function showView(view) {
     if (view !== 'reader') reader.close();

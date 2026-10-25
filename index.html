@@ -49,6 +49,9 @@
                                 <h2 id="audioTitle">《猫鱼》</h2>
                                 <p id="audioAuthor">陈冲 · 前言</p>
                             </div>
+                            <button aria-label="阅读本章" class="icon-btn" disabled id="readChapterBtn" title="本章暂无 PDF">
+                                <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8l-5-5Zm0 0v5h5M8 12h8M8 16h6"></path></svg>
+                            </button>
                             <button aria-label="收藏本书" aria-pressed="false" class="icon-btn" disabled id="likeBtn">
                                 <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"></path></svg>
                             </button>
@@ -114,10 +117,7 @@
                         </div>
                     </section>
                     <section class="book-details" hidden id="bookDetails">
-                        <div class="details-heading">
-                            <h3>关于这本书</h3>
-                            <a class="pdf-link" hidden id="pdfOpen" rel="noopener" target="_blank">在线阅读 PDF</a>
-                        </div>
+                        <h3>关于这本书</h3>
                         <p id="bookDescription"></p>
                     </section>
                 </section>
@@ -168,7 +168,6 @@
                 <section aria-labelledby="readerTitle" hidden id="readerView">
                     <div class="reader-heading">
                         <button class="text-btn" id="readerBack">返回收听</button>
-                        <a class="pdf-link" id="readerExternal" target="_blank" rel="noopener">打开原文件 ↗</a>
                     </div>
                     <h2 id="readerTitle" tabindex="-1"></h2>
                     <div aria-label="PDF 阅读控制" class="reader-controls">
@@ -177,7 +176,7 @@
                         <button aria-label="下一页" id="pdfNext" disabled>›</button>
                         <label><span class="sr-only">阅读缩放</span><select id="pdfZoom" disabled><option value="1">适合宽度</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select></label>
                     </div>
-                    <div id="pdfError" class="library-errors" role="alert" hidden><p>PDF 暂时无法显示，请检查网络后重试，或打开原文件。</p><button class="text-btn" id="pdfRetry">重试</button></div>
+                    <div id="pdfError" class="library-errors" role="alert" hidden><p>PDF 暂时无法显示，请检查网络后重试。</p><button class="text-btn" id="pdfRetry">重试</button></div>
                     <p class="sr-only" id="pdfPageStatus" role="status"></p>
                     <div class="pdf-stage" id="pdfStage" aria-busy="false"><div class="pdf-loading" id="pdfLoading" role="status" hidden><span class="sr-only">正在加载 PDF</span></div><div id="pdfCanvasHost"></div></div>
                 </section>
