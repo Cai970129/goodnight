@@ -171,8 +171,16 @@ small {
     letter-spacing: -.02em;
 }
 
-.app-header h1 span {
+.header-heart {
+    display: inline-flex;
+    vertical-align: -2px;
     color: var(--heart);
+}
+
+.header-heart-fill {
+    fill: currentColor;
+    clip-path: inset(var(--heart-empty, 100%) 0 0 0) fill-box;
+    transition: clip-path 350ms ease;
 }
 
 .app-header p {

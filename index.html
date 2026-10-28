@@ -9,13 +9,14 @@
         <title>Bedtime Reading · 睡前听书</title>
         <link href="./asserts/css/main.css" rel="stylesheet">
         <link href="./manifest.webmanifest" rel="manifest">
+        <link href="./asserts/images/icon.svg" rel="icon" type="image/svg+xml">
         <script src="./asserts/js/app.js" type="module"></script>
     </head>
     <body>
         <div class="app-shell">
             <header class="app-header">
                 <div>
-                    <h1>Bedtime Reading <span aria-hidden="true">♡</span></h1>
+                    <h1>Bedtime Reading <span class="header-heart" id="headerHeart" role="img" aria-label="已积累 0 颗爱心，共 10 颗填满"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><path class="header-heart-fill" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"></path><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-1 1-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"></path></svg></span></h1>
                     <p>你的声音 · 是我最好的晚安</p>
                 </div>
                 <div aria-label="CL" class="cl-mark" role="img">
@@ -28,7 +29,7 @@
             <main aria-label="听书内容" id="mainContent" tabindex="-1">
                 <section aria-label="收听" id="homeView">
                     <div class="banner" id="bannerPanel">
-                        <img alt="" hidden id="bannerImg">
+                        <img alt="《猫鱼》配图" fetchpriority="high" id="bannerImg" data-initial-src="books/01-MaoYu/images/游泳.webp" decoding="async">
                         <div class="banner-shade"></div>
                         <div class="banner-top">
                             <span>💌 字句予你</span>
@@ -44,7 +45,7 @@
                     </div>
                     <section aria-label="音频播放器" class="player-panel surface">
                         <div class="player-book">
-                            <div class="player-cover" id="playerCoverContainer"></div>
+                            <div class="player-cover" id="playerCoverContainer"><img alt="《猫鱼》封面" data-initial-src="books/01-MaoYu/images/cover.webp" width="52" height="72" decoding="async" fetchpriority="low"></div>
                             <div class="book-info">
                                 <h2 id="audioTitle">《猫鱼》</h2>
                                 <p id="audioAuthor">陈冲 · 前言</p>
@@ -78,7 +79,7 @@
                                 </svg>
                             </button>
                             <button aria-label="播放" aria-pressed="false" class="play-btn" disabled id="playBtn">
-                                <img alt="" aria-hidden="true" class="player-avatar" src="asserts/images/icon.svg" width="56" height="56" decoding="async">
+                                <img alt="" aria-hidden="true" class="player-avatar" fetchpriority="low" data-initial-src="asserts/images/narrator-female.webp" width="56" height="56" decoding="async">
                             </button>
                             <button aria-label="下一节" class="icon-btn" disabled id="nextBtn">
                                 <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
@@ -156,14 +157,14 @@
                     </div>
                     <div class="setting-row">
                         <div>
-                            清除收藏和设置
+                            清除缓存
                             <small>
-                                清除当前浏览器的收藏和收听设置
+                                清除当前浏览器的收藏、收听设置和爱心进度
                             </small>
                         </div>
-                        <button class="text-btn" id="clearRecordsBtn">清除</button>
+                        <button class="text-btn" id="clearRecordsBtn">清除缓存</button>
                     </div>
-                    <p class="help">收藏和设置保存在当前浏览器中。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p>
+                    <p class="help">收藏、设置和爱心进度保存在当前浏览器中。爱心从首次积累起每 3 天自动清空，关闭网页后下次打开生效。睡眠定时刷新后取消；手机系统限制后台运行时，定时停止可能延后。</p>
                 </section>
                 <section aria-labelledby="readerTitle" hidden id="readerView">
                     <div class="reader-heading">
@@ -185,7 +186,7 @@
                 <div class="compact-player-row">
                     <button aria-label="返回收听页面" class="compact-book" id="returnToPlayerBtn"><strong id="compactBookTitle"></strong><span id="compactTrackTitle"></span></button>
                     <button aria-label="播放" aria-pressed="false" class="play-btn compact-play-btn" id="compactPlayBtn">
-                                <img alt="" aria-hidden="true" class="player-avatar" src="asserts/images/icon.svg" width="56" height="56" decoding="async">
+                                <img alt="" aria-hidden="true" class="player-avatar" fetchpriority="low" data-initial-src="asserts/images/narrator-female.webp" width="56" height="56" decoding="async">
                     </button>
                 </div>
                 <p class="compact-player-status" hidden id="compactPlayerStatus" role="status"></p>
@@ -198,8 +199,8 @@
             </nav>
         </div>
         <dialog aria-labelledby="clearDialogTitle" id="clearDialog">
-            <h2 id="clearDialogTitle">清除收藏和设置？</h2>
-            <p>收藏和收听设置将被清除，书籍文件不受影响。</p>
+            <h2 id="clearDialogTitle">清除缓存？</h2>
+            <p>收藏、收听设置和爱心进度将被清除，书籍文件不受影响。</p>
             <div class="dialog-actions">
                 <button class="secondary-btn" id="cancelClearBtn">取消</button>
                 <button class="primary-btn" id="confirmClearBtn">确认清除</button>

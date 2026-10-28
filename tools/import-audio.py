@@ -74,7 +74,7 @@ def analyze(path, repair):
 
 def natural_key(path):
     return [(0, int(part)) if part.isdigit() else (1, part.casefold())
-            for part in re.split(r'(\d+)', path.name)]
+            for part in re.split(r'(\d+)', re.sub(r'[\s_—–-]+', '', path.name))]
 
 
 def require_text(data, key):

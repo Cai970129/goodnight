@@ -48,7 +48,7 @@ export function parseBook(data, manifestURL, expectedId) {
             const track = {
                 id: item.id, title, chapterId: chapter.id,
                 label: entry.tracks.length === 1 && title === chapter.title ? title : `${chapter.title} · ${title}`,
-                src: resolveResource(item.src, manifestURL), duration: Number.isFinite(item.duration) ? item.duration : null
+                src: resolveResource(item.src, manifestURL), duration: Number.isFinite(item.duration) && item.duration > 0 ? item.duration : null
             };
             chapter.tracks.push(track);
             book.tracks.push(track);

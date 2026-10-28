@@ -53,12 +53,14 @@ class ImportAudioTests(unittest.TestCase):
         return json.loads(self.manifest.read_text())
 
     def test_preview_is_read_only_and_uses_natural_sort(self):
+        self.audio('录音–1.mp3')
         self.audio('录音10.mp3')
         self.audio('录音2.mp3')
         original = self.manifest.read_bytes()
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             self.assertEqual(module.main(self.args, self.root), 0)
+        self.assertLess(output.getvalue().index('录音–1.mp3'), output.getvalue().index('录音2.mp3'))
         self.assertLess(output.getvalue().index('录音2.mp3'), output.getvalue().index('录音10.mp3'))
         self.assertEqual(original, self.manifest.read_bytes())
         self.assertFalse((self.root / '.local').exists())

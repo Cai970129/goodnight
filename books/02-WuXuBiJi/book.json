@@ -5,15 +5,15 @@
   "narrator": "yangLieee",
   "category": "小说",
   "description": "关于记忆、生命与爱情的长篇小说。",
-  "cover": "images/cover.jpg",
+  "cover": "images/cover.webp",
   "banners": [
     {
-      "image": "images/ginkgo.jpg",
+      "image": "images/ginkgo.webp",
       "quote": "在还没有你的时候，这个世界已经存在了很久————这不过是在有了我的时候我所听到的一个传说。在没有你的时候这个世界还要存在很久————这不过是在还有我的时候我被要求接收的一种猜想",
       "source": "—— 史铁生《务虚笔记》"
     },
     {
-      "image": "images/ginkgo.jpg",
+      "image": "images/ginkgo.webp",
       "quote": "我站在今天设想过去又幻想未来，过去和未来在今天随意交叉，因而过去和未来都在刮着现在的风",
       "source": "—— 史铁生《务虚笔记》"
     }
@@ -105,6 +105,43 @@
         }
       ],
       "pdfPage": 31
+    },
+    {
+      "id": "chapter-03",
+      "title": "第三章 · 死亡序幕",
+      "pdfPage": 46,
+      "tracks": [
+        {
+          "id": "si-wang-xu-mu-01",
+          "title": "第 1 节",
+          "src": "audio/03-SiWangXuMu/01.mp3",
+          "duration": 419.952
+        },
+        {
+          "id": "si-wang-xu-mu-02",
+          "title": "第 2 节",
+          "src": "audio/03-SiWangXuMu/02.mp3",
+          "duration": 166.032
+        },
+        {
+          "id": "si-wang-xu-mu-03",
+          "title": "第 3 节",
+          "src": "audio/03-SiWangXuMu/03.mp3",
+          "duration": 129.792
+        },
+        {
+          "id": "si-wang-xu-mu-04",
+          "title": "第 4 节",
+          "src": "audio/03-SiWangXuMu/04.mp3",
+          "duration": 465.768
+        },
+        {
+          "id": "si-wang-xu-mu-05",
+          "title": "第 5 节",
+          "src": "audio/03-SiWangXuMu/05.mp3",
+          "duration": 198.312
+        }
+      ]
     }
   ]
 }

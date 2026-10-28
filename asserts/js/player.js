@@ -94,7 +94,8 @@ export class Player extends EventTarget {
     }
     updateMediaState() {
         if (!globalThis.navigator?.mediaSession) return;
-        navigator.mediaSession.playbackState = !this.track ? 'none' : this.state.playing ? 'playing' : 'paused';
+        const state = !this.track ? 'none' : this.state.playing ? 'playing' : 'paused';
+        if (navigator.mediaSession.playbackState !== state) navigator.mediaSession.playbackState = state;
     }
     updateMediaPosition() {
         if (!globalThis.navigator?.mediaSession?.setPositionState || !this.state.duration) return;
@@ -102,68 +103,60 @@ export class Player extends EventTarget {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const audioPlayer = document.querySelector('audio');
-  
-  if (audioPlayer) {
-    audioPlayer.addEventListener('ended', () => {
-      const chapterId = audioPlayer.getAttribute('src') || 'default_chapter';
-      let storageKey = `chapter_loop_count_${chapterId}`;
-      
-      let currentCount = parseInt(localStorage.getItem(storageKey) || '0', 10);
-      
-      currentCount++;
-      localStorage.setItem(storageKey, currentCount);
+const endCounts = new Map();
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const audio = document.getElementById('audioPlayer');
 
-      if (currentCount === 1) {
-        playStarAnim(15);
-      } else if (currentCount === 2) {
-        playStarAnim(45);
-      } else if (currentCount >= 3) {
-        playMeteorAnim(35);
-        localStorage.setItem(storageKey, '0');
-      }
-    });
-  }
+audio?.addEventListener('ended', () => {
+    if (reduceMotion.matches) return;
+    const key = `chapter_loop_count_${audio.currentSrc || audio.src}`;
+    let previous = endCounts.get(key);
+    if (previous === undefined) {
+        previous = 0;
+        try {
+            const value = Number(localStorage.getItem(key));
+            if (Number.isInteger(value) && value >= 0 && value < 3) previous = value;
+        } catch { /* Keep the session count when storage is unavailable. */ }
+    }
+    const count = previous + 1, next = count % 3;
+    endCounts.set(key, next);
+    try { localStorage.setItem(key, String(next)); } catch { /* Session count remains available. */ }
+    if (count < 3) playStars(count === 1 ? 15 : 45);
+    else playMeteors(35);
 });
 
-function playStarAnim(count) {
-  const container = createContainer();
-  const icons = ['⭐', '✨', '🌟'];
-  
-  for (let i = 0; i < count; i++) {
-    const star = document.createElement('div');
-    star.className = 'falling-star';
-    star.innerText = icons[Math.floor(Math.random() * icons.length)];
-    star.style.left = Math.random() * 100 + 'vw';
-    star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-    star.style.animationDelay = Math.random() * 0.8 + 's';
-    container.appendChild(star);
-  }
-  removeContainer(container, 4500);
+function playStars(count) {
+    const container = effectContainer();
+    for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'falling-star';
+        star.textContent = ['⭐', '✨', '🌟'][Math.floor(Math.random() * 3)];
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.animationDuration = `${Math.random() * 2 + 1.5}s`;
+        star.style.animationDelay = `${Math.random() * .8}s`;
+        container.append(star);
+    }
+    setTimeout(() => container.remove(), 4500);
 }
 
-function playMeteorAnim(count) {
-  const container = createContainer();
-  for (let i = 0; i < count; i++) {
-    const meteor = document.createElement('div');
-    meteor.className = 'meteor';
-    meteor.style.left = (Math.random() * 120 - 10) + 'vw';
-    meteor.style.top = -Math.random() * 200 + 'px';
-    meteor.style.animationDuration = (Math.random() * 1 + 0.8) + 's';
-    meteor.style.animationDelay = Math.random() * 2 + 's';
-    container.appendChild(meteor);
-  }
-  removeContainer(container, 4500);
+function playMeteors(count) {
+    const container = effectContainer();
+    for (let i = 0; i < count; i++) {
+        const meteor = document.createElement('div');
+        meteor.className = 'meteor';
+        meteor.style.left = `${Math.random() * 120 - 10}vw`;
+        meteor.style.top = `${-Math.random() * 200}px`;
+        meteor.style.animationDuration = `${Math.random() + .8}s`;
+        meteor.style.animationDelay = `${Math.random() * 2}s`;
+        container.append(meteor);
+    }
+    setTimeout(() => container.remove(), 4500);
 }
 
-function createContainer() {
-  const container = document.createElement('div');
-  container.className = 'star-container';
-  document.body.appendChild(container);
-  return container;
-}
-
-function removeContainer(container, time) {
-  setTimeout(() => container.remove(), time);
+function effectContainer() {
+    const container = document.createElement('div');
+    container.className = 'star-container';
+    container.setAttribute('aria-hidden', 'true');
+    document.body.append(container);
+    return container;
 }

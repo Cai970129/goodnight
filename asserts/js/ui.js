@@ -1,5 +1,6 @@
 import { formatTime } from './player.js';
 import { adjacentTrack } from './library.js';
+import { HEART_LIMIT } from './storage.js';
 
 export const byId = id => document.getElementById(id);
 const narratorAvatars = new Map([['Carrie', 'narrator-female.webp'], ['yangLieee', 'narrator-male.webp']]);
@@ -10,28 +11,37 @@ const text = (tag, content, className) => {
     if (className) element.className = className;
     return element;
 };
+const setText = (id, value) => {
+    const element = byId(id);
+    if (element.textContent !== value) element.textContent = value;
+};
 const sourceLink = (label, url) => {
     const link = text('a', label);
     link.href = url; link.target = '_blank'; link.rel = 'noopener';
     return link;
 };
 
-function coverElement(book, lazy = false) {
+function coverElement(book, lazy = false, image = document.createElement('img')) {
     const fallback = () => text('span', book.title, 'cover-fallback');
     if (!book.cover) return fallback();
-    const image = document.createElement('img');
+    const same = image.src === book.cover;
+    if (same && image.complete && !image.naturalWidth) return fallback();
     image.loading = lazy ? 'lazy' : 'eager'; image.decoding = 'async';
     image.alt = `《${book.title}》封面`;
-    image.addEventListener('error', () => image.replaceWith(fallback()), { once: true });
-    image.src = book.cover;
+    image.onerror = () => image.replaceWith(fallback());
+    if (!same) image.src = book.cover;
     return image;
 }
 
 export class UI {
     constructor(actions) {
+        this.onHeart = actions.heart;
         this.view = 'home'; this.category = ''; this.bannerIndex = 0; this.hasTrack = false;
-        this.chapterStates = new Map();
-        document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => actions.view(button.dataset.view)));
+        this.chapterStates = new Map(); this.chapterGroups = [];
+        this.viewButtons = document.querySelectorAll('[data-view]');
+        this.minuteButtons = document.querySelectorAll('[data-minutes]');
+        this.avatars = document.querySelectorAll('.player-avatar');
+        this.viewButtons.forEach(button => button.addEventListener('click', () => actions.view(button.dataset.view)));
         byId('bookList').addEventListener('click', event => {
             const button = event.target.closest('[data-book-id]');
             if (button) actions.book(button.dataset.bookId);
@@ -47,7 +57,7 @@ export class UI {
         byId('bookSearch').addEventListener('input', () => actions.filterBooks());
         byId('chapterSearch').addEventListener('input', () => actions.filterChapters());
         byId('toggleChaptersBtn').addEventListener('click', () => {
-            const groups = [...byId('chapterList').querySelectorAll('details')];
+            const groups = this.chapterGroups;
             const open = groups.some(group => !group.open);
             for (const group of groups) {
                 group.open = open;
@@ -70,7 +80,7 @@ export class UI {
         byId('progressBar').addEventListener('input', event => actions.seek(Number(event.target.value) / 1000));
         for (const id of ['playerSpeed', 'settingsSpeed']) byId(id).addEventListener('change', event => actions.settings({ speed: Number(event.target.value) }));
         byId('autoNext').addEventListener('change', event => actions.settings({ autoNext: event.target.checked }));
-        document.querySelectorAll('[data-minutes]').forEach(button => button.addEventListener('click', () => actions.timer(Number(button.dataset.minutes))));
+        this.minuteButtons.forEach(button => button.addEventListener('click', () => actions.timer(Number(button.dataset.minutes))));
         byId('trackTimerBtn').addEventListener('click', () => actions.timer('track'));
         byId('chapterTimerBtn').addEventListener('click', () => actions.timer('chapter'));
         byId('cancelTimerBtn').addEventListener('click', () => actions.timer(null));
@@ -98,6 +108,7 @@ export class UI {
         }, 300);
     }
     showHeart(button) {
+        this.onHeart();
         clearTimeout(this.heartTimer); this.heart?.remove();
         const heart = text('span', '♥', 'avatar-heart');
         const bounds = button.getBoundingClientRect();
@@ -106,6 +117,11 @@ export class UI {
         heart.style.top = `${bounds.top + bounds.height / 2}px`;
         document.body.append(heart); this.heart = heart;
         this.heartTimer = setTimeout(() => { heart.remove(); this.heart = null; }, 1000);
+    }
+    updateHeart(count) {
+        const heart = byId('headerHeart');
+        heart.style.setProperty('--heart-empty', `${100 - count / HEART_LIMIT * 100}%`);
+        heart.setAttribute('aria-label', `已积累 ${count} 颗爱心，共 ${HEART_LIMIT} 颗填满`);
     }
     notice(message, error = false) {
         byId('notice').hidden = !message; byId('notice').textContent = message || '';
@@ -119,7 +135,7 @@ export class UI {
         byId('settingsView').hidden = view !== 'settings';
         byId('readerView').hidden = view !== 'reader';
         byId('compactPlayer').hidden = view === 'home' || !this.hasTrack;
-        document.querySelectorAll('[data-view]').forEach(button => {
+        this.viewButtons.forEach(button => {
             if (button.dataset.view === view) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
         });
         byId('shelfTitle').textContent = view === 'favorites' ? '我的收藏' : '我的书架';
@@ -136,13 +152,14 @@ export class UI {
         const source = this.view === 'favorites' ? books.filter(book => favorites.includes(book.id)) : books;
         const categories = [...new Set(source.map(book => book.category).filter(Boolean))];
         if (!categories.includes(this.category)) this.category = '';
-        const filters = byId('categoryFilters'); filters.replaceChildren();
+        const filters = byId('categoryFilters'), filterBatch = document.createDocumentFragment();
         for (const category of ['', ...categories]) {
             const button = text('button', category || '全部'); button.dataset.category = category;
-            button.setAttribute('aria-pressed', String(category === this.category)); filters.append(button);
+            button.setAttribute('aria-pressed', String(category === this.category)); filterBatch.append(button);
         }
+        filters.replaceChildren(filterBatch);
         const visible = source.filter(book => (!this.category || book.category === this.category) && `${book.title} ${book.author}`.toLocaleLowerCase().includes(query));
-        const list = byId('bookList'); list.replaceChildren();
+        const list = byId('bookList'), bookBatch = document.createDocumentFragment();
         for (const book of visible) {
             const row = document.createElement('button'); row.className = 'book-row'; row.dataset.bookId = book.id;
             row.setAttribute('aria-label', `选择《${book.title}》`);
@@ -154,8 +171,9 @@ export class UI {
             const chapters = new Set(available.map(track => track.chapterId));
             info.append(text('small', `${book.author} · ${chapters.size} 章 · ${available.length} 节可收听`));
             info.append(text('small', book.description));
-            row.append(cover, info); list.append(row);
+            row.append(cover, info); bookBatch.append(row);
         }
+        list.replaceChildren(bookBatch);
         byId('shelfEmpty').hidden = visible.length > 0;
         byId('shelfEmpty').textContent = query || this.category ? '没有找到符合条件的书籍。' : this.view === 'favorites' ? '还没有收藏。收听时点击爱心，把喜欢的书留下来。' : '书架暂时没有书籍。';
         byId('libraryErrors').hidden = !errors.length;
@@ -171,14 +189,16 @@ export class UI {
         this.book = book;
         if (changed) { this.cancelPlayClick(); this.heart?.remove(); this.bannerIndex = 0; byId('chapterSearch').value = ''; }
         const avatar = new URL(`../images/${narratorAvatars.get(book?.narrator) || 'icon.svg'}`, import.meta.url).href;
-        for (const image of document.querySelectorAll('.player-avatar')) {
+        for (const image of this.avatars) {
             if (image.src !== avatar) {
                 image.src = avatar;
                 for (const animation of image.getAnimations()) animation.currentTime = 0;
             }
         }
         byId('audioTitle').textContent = book ? `《${book.title}》` : '书架暂时没有书籍';
-        byId('playerCoverContainer').replaceChildren(...(book ? [coverElement(book)] : []));
+        const cover = byId('playerCoverContainer');
+        const nextCover = book ? coverElement(book, false, cover.querySelector('img') || undefined) : null;
+        if (cover.firstElementChild !== nextCover) cover.replaceChildren(...(nextCover ? [nextCover] : []));
         byId('bookDetails').hidden = !book;
         byId('bookDescription').textContent = book?.description || '';
         this.renderBanner(book); this.updateFavorite(book, storage);
@@ -189,9 +209,13 @@ export class UI {
         this.bannerIndex %= banners.length || 1;
         const data = banners[this.bannerIndex];
         const img = byId('bannerImg'); img.hidden = !data?.image;
-        if (data?.image) { img.src = data.image; img.alt = `《${book.title}》配图`; }
-        else img.removeAttribute('src');
         img.onerror = () => { img.hidden = true; };
+        if (data?.image) {
+            if (img.src !== data.image) img.src = data.image;
+            img.alt = `《${book.title}》配图`;
+            if (img.complete && !img.naturalWidth) img.hidden = true;
+        }
+        else img.removeAttribute('src');
         byId('bannerQuote').textContent = data?.quote || (book ? `今晚，翻开《${book.title}》` : '让故事陪你入眠。');
         const source = byId('bannerSource'); source.replaceChildren();
         if (data?.sourceURL) source.append(sourceLink(data.source, data.sourceURL));
@@ -201,12 +225,13 @@ export class UI {
         byId('nextBannerBtn').hidden = banners.length < 2;
     }
     renderChapters(book) {
-        const list = byId('chapterList'); list.replaceChildren();
+        this.playbackTrack = undefined;
+        const list = byId('chapterList'), batch = document.createDocumentFragment();
         const query = byId('chapterSearch').value.trim().toLocaleLowerCase();
         byId('chapterSearch').disabled = !book;
         byId('toggleChaptersBtn').disabled = !book?.chapters.length;
         byId('toggleChaptersBtn').hidden = !!query;
-        if (!book) return;
+        if (!book) { this.chapterGroups = []; list.replaceChildren(); return; }
         for (const chapter of book.chapters) {
             const tracks = chapter.tracks.filter(track => `${chapter.title} ${track.title}`.toLocaleLowerCase().includes(query));
             if (!tracks.length && query && !chapter.title.toLocaleLowerCase().includes(query)) continue;
@@ -228,13 +253,15 @@ export class UI {
                 content.append(button);
             }
             if (!chapter.tracks.length) content.append(text('p', '音频待添加', 'chapter-unavailable'));
-            list.append(group);
+            batch.append(group);
         }
-        if (!list.childElementCount) list.append(text('p', '没有找到符合条件的章节。', 'empty-state'));
+        if (!batch.childElementCount) batch.append(text('p', '没有找到符合条件的章节。', 'empty-state'));
+        list.replaceChildren(batch);
+        this.chapterGroups = [...list.querySelectorAll('details')];
         this.updateChapterToggle();
     }
     updateChapterToggle() {
-        const groups = [...byId('chapterList').querySelectorAll('details')];
+        const groups = this.chapterGroups;
         const open = groups.length > 0 && groups.every(group => group.open);
         byId('toggleChaptersBtn').textContent = open ? '收起全部' : '展开全部';
     }
@@ -246,42 +273,47 @@ export class UI {
     }
     updatePlayback(player) {
         const { book, track } = player, state = player.state;
+        const contentChanged = this.playbackBook !== book || this.playbackTrack !== track;
+        const status = `${state.playing}:${state.pending}:${state.error}:${state.message}`;
         this.hasTrack = !!track?.src;
-        const chapter = book?.chapters.find(entry => entry.id === track?.chapterId);
-        const canRead = !!(book?.pdf && chapter?.pdfPage);
-        byId('readChapterBtn').disabled = !canRead;
-        byId('readChapterBtn').title = canRead ? `阅读 ${chapter.title}` : '本章暂无 PDF';
         byId('compactPlayer').hidden = this.view === 'home' || !this.hasTrack;
-        byId('compactBookTitle').textContent = book ? `《${book.title}》` : '';
-        byId('compactTrackTitle').textContent = track?.label || '';
-        byId('audioAuthor').textContent = track ? `${book.author} · ${track.label}` : book ? `${book.author} · 音频待添加` : '请在书架中选择书籍';
-        for (const id of ['playBtn', 'compactPlayBtn']) {
-            const button = byId(id); button.disabled = !track?.src;
-            button.setAttribute('aria-pressed', String(state.playing));
-            button.setAttribute('aria-label', state.pending ? '取消加载' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
+        if (contentChanged) {
+            this.playbackBook = book; this.playbackTrack = track;
+            const chapter = book?.chapters.find(entry => entry.id === track?.chapterId);
+            const canRead = !!(book?.pdf && chapter?.pdfPage);
+            byId('readChapterBtn').disabled = !canRead;
+            byId('readChapterBtn').title = canRead ? `阅读 ${chapter.title}` : '本章暂无 PDF';
+            setText('compactBookTitle', book ? `《${book.title}》` : '');
+            setText('compactTrackTitle', track?.label || '');
+            setText('audioAuthor', track ? `${book.author} · ${track.label}` : book ? `${book.author} · 音频待添加` : '请在书架中选择书籍');
+            byId('prevBtn').disabled = !book || !track || !adjacentTrack(book, track.id, -1);
+            byId('nextBtn').disabled = !book || !track || !adjacentTrack(book, track.id, 1);
+            byId('trackTimerBtn').disabled = !track;
+            byId('chapterTimerBtn').disabled = !track;
+            document.querySelectorAll('[data-track-id]').forEach(row => row.setAttribute('aria-current', String(row.dataset.trackId === track?.id)));
+            document.querySelectorAll('[data-chapter-id]').forEach(group => { group.dataset.current = String(group.dataset.chapterId === track?.chapterId); });
         }
-        for (const id of ['playerStatus', 'compactPlayerStatus']) {
-            const status = byId(id);
-            status.hidden = !state.error || !state.message;
-            status.textContent = state.error ? state.message : '';
+        if (contentChanged || this.playbackStatus !== status) {
+            this.playbackStatus = status;
+            for (const id of ['playBtn', 'compactPlayBtn']) {
+                const button = byId(id); button.disabled = !track?.src;
+                button.setAttribute('aria-pressed', String(state.playing));
+                button.setAttribute('aria-label', state.pending ? '取消加载' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
+            }
+            for (const id of ['playerStatus', 'compactPlayerStatus']) {
+                byId(id).hidden = !state.error || !state.message;
+                setText(id, state.error ? state.message : '');
+            }
+            byId('playerStatus').dataset.error = String(state.error);
         }
-        byId('playerStatus').dataset.error = String(state.error);
-        byId('currentTime').textContent = formatTime(state.currentTime);
-        byId('durationTime').textContent = formatTime(state.duration);
-        byId('progressBar').disabled = !track?.src || !state.duration || state.error;
-        byId('progressBar').value = state.duration ? Math.round(state.currentTime / state.duration * 1000) : 0;
-        byId('progressBar').setAttribute('aria-valuetext', `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`);
-        byId('prevBtn').disabled = !book || !track || !adjacentTrack(book, track.id, -1);
-        byId('nextBtn').disabled = !book || !track || !adjacentTrack(book, track.id, 1);
-        byId('trackTimerBtn').disabled = !track;
-        byId('chapterTimerBtn').disabled = !track;
-        document.querySelectorAll('[data-track-id]').forEach(row => {
-            const selected = String(row.dataset.trackId === track?.id);
-            if (row.getAttribute('aria-current') !== selected) row.setAttribute('aria-current', selected);
-        });
-        document.querySelectorAll('[data-chapter-id]').forEach(group => {
-            group.dataset.current = String(group.dataset.chapterId === track?.chapterId);
-        });
+        const current = formatTime(state.currentTime), duration = formatTime(state.duration);
+        setText('currentTime', current); setText('durationTime', duration);
+        const progress = byId('progressBar');
+        progress.disabled = !track?.src || !state.duration || state.error;
+        const progressValue = state.duration ? Math.round(state.currentTime / state.duration * 1000) : 0;
+        if (Number(progress.value) !== progressValue) progress.value = progressValue;
+        const label = `${current} / ${duration}`;
+        if (progress.getAttribute('aria-valuetext') !== label) progress.setAttribute('aria-valuetext', label);
     }
     updateSettings(settings) {
         byId('playerSpeed').value = String(settings.speed);
@@ -294,7 +326,7 @@ export class UI {
         const remaining = timer.remaining();
         const status = timer.mode === 'track' ? '本节结束停止' : timer.mode === 'chapter' ? '本章结束停止' : remaining !== null ? `剩余 ${formatTime(remaining)}` : '';
         if (byId('timerStatus').textContent !== status) byId('timerStatus').textContent = status;
-        document.querySelectorAll('[data-minutes]').forEach(button => button.setAttribute('aria-pressed', String(timer.mode === 'time' && timer.selectedMinutes === Number(button.dataset.minutes))));
+        this.minuteButtons.forEach(button => button.setAttribute('aria-pressed', String(timer.mode === 'time' && timer.selectedMinutes === Number(button.dataset.minutes))));
         byId('trackTimerBtn').setAttribute('aria-pressed', String(timer.mode === 'track'));
         byId('chapterTimerBtn').setAttribute('aria-pressed', String(timer.mode === 'chapter'));
         byId('cancelTimerBtn').disabled = !timer.mode;

@@ -1,15 +1,21 @@
 import { loadLibrary, adjacentTrack } from './library.js';
-import { PreferencesStorage } from './storage.js';
+import { PreferencesStorage, HEART_RESET_MS } from './storage.js';
 import { Player } from './player.js';
 import { SleepTimer } from './timer.js';
 import { UI, byId } from './ui.js';
 import { PDFReader } from './pdf-reader.js';
+
+// Start default images before fetching book data, after the blocking stylesheet.
+document.querySelectorAll('[data-initial-src]').forEach(image => {
+    image.src = image.dataset.initialSrc; image.removeAttribute('data-initial-src');
+});
 
 const DEFAULT_BOOK_ID = '01-MaoYu';
 export const player = new Player(byId('audioPlayer'));
 export const timer = new SleepTimer();
 let library = { books: [], errors: [] }, loading = false;
 let backend, storageWarning = '';
+let heartTimeout;
 try { backend = localStorage; } catch { /* Storage access can be disabled. */ }
 export const storage = new PreferencesStorage(backend, message => { storageWarning = message; });
 
@@ -24,6 +30,9 @@ const ui = new UI({
     track: selectTrack,
     togglePlay: () => { if (!timer.check()) player.toggle(); },
     step: direction => stepTrack(direction),
+    heart: () => {
+        storage.addHeart(); updateHeart(); showStorageWarning();
+    },
     favorite: () => {
         if (!player.book) return;
         storage.toggleFavorite(player.book.id); ui.updateFavorite(player.book, storage); renderLibrary();
@@ -44,7 +53,7 @@ const ui = new UI({
     },
     retry: initialize,
     clear: () => {
-        storage.clear(); applySettings();
+        storage.clear(); applySettings(); updateHeart();
         ui.updateFavorite(player.book, storage); renderLibrary();
         showStorageWarning();
     }
@@ -60,6 +69,13 @@ function showView(view) {
     ui.show(view); renderLibrary();
 }
 
+function updateHeart() {
+    clearTimeout(heartTimeout);
+    storage.expireHearts(); ui.updateHeart(storage.state.heartCount);
+    if (storage.state.heartStartedAt !== null) {
+        heartTimeout = setTimeout(updateHeart, Math.max(0, storage.state.heartStartedAt + HEART_RESET_MS - Date.now()));
+    }
+}
 function updatePlayback() { ui.updatePlayback(player); }
 function renderLibrary() {
     if (['shelf', 'favorites'].includes(ui.view)) ui.renderLibrary(library.books, storage, player.book?.id, library.errors);
@@ -87,14 +103,16 @@ function stepTrack(direction) {
 
 player.addEventListener('change', updatePlayback);
 player.addEventListener('ended', () => {
+    if (!player.book || !player.track) return;
     const next = adjacentTrack(player.book, player.track.id, 1);
     if (timer.trackEnded(!next || next.chapterId !== player.track.chapterId)) return;
     if (storage.state.settings.autoNext && next) selectTrack(next.id);
 });
 timer.addEventListener('change', () => ui.updateTimer(timer));
 timer.addEventListener('expire', () => { ui.cancelPlayClick(); player.pause(); });
-document.addEventListener('visibilitychange', () => timer.check());
-window.addEventListener('pageshow', () => timer.check());
+document.addEventListener('visibilitychange', () => { timer.check(); updateHeart(); });
+window.addEventListener('pageshow', () => { timer.check(); updateHeart(); });
+window.addEventListener('pagehide', () => clearTimeout(heartTimeout));
 
 function installMediaControls() {
     if (!navigator.mediaSession) return;
@@ -143,5 +161,5 @@ async function initialize() {
     } finally { loading = false; byId('retryLibraryBtn').disabled = false; }
 }
 
-ui.updateTimer(timer); applySettings(); installMediaControls();
+ui.updateTimer(timer); updateHeart(); applySettings(); installMediaControls();
 export const ready = initialize();

@@ -1,5 +1,5 @@
 export class SleepTimer extends EventTarget {
-    constructor({ now = () => Date.now(), schedule = fn => setInterval(fn, 500), unschedule = handle => clearInterval(handle) } = {}) {
+    constructor({ now = () => Date.now(), schedule = fn => setInterval(fn, 1000), unschedule = handle => clearInterval(handle) } = {}) {
         super(); this.now = now; this.schedule = schedule; this.unschedule = unschedule;
         this.mode = null; this.deadline = null; this.handle = null; this.selectedMinutes = null;
     }

@@ -5,35 +5,35 @@
   "narrator": "Carrie",
   "category": "散文",
   "description": "在记忆与日常之间，听陈冲讲述她的生命故事。",
-  "cover": "images/cover.jpg",
+  "cover": "images/cover.webp",
   "banners": [
     {
-      "image": "images/游泳.jpg",
+      "image": "images/游泳.webp",
       "quote": "“影像在显影剂中慢慢浮现出来，神奇而美妙。一个不可重复的下午，一片已经逝去的云彩，在那一刻定格，成为永远，就像琥珀里的昆虫。”",
       "source": "—— 陈冲《猫鱼》"
     },
     {
-      "image": "images/吹泡泡.jpg",
+      "image": "images/吹泡泡.webp",
       "quote": "“她说长头发洗起来太费肥皂，但是用肥皂来吹泡泡在她的眼里却是无可非议的。”",
       "source": "—— 陈冲《猫鱼》"
     },
     {
-      "image": "images/洗澡.jpg",
+      "image": "images/洗澡.webp",
       "quote": "“回想起来，在晒台上洗澡的时候，母亲比其他任何时候都要快乐，她似乎在享受一份那个年代所不可思议的自由。我也是快乐的，苍穹下我隐约感到这是一种特权，母亲的肢体、歌声，还有她看不到的微笑，都在向我透露人生的秘密……”",
       "source": "—— 陈冲《猫鱼》"
     },
     {
-      "image": "images/cat-resting.jpg",
+      "image": "images/cat-resting.webp",
       "quote": "“记忆,好像早晨爱人离别后枕头上柔软的凹印,那是他在你生命里存在过的证据”",
       "source": "—— 陈冲《猫鱼》"
     },
     {
-      "image": "images/cat-held.jpg",
+      "image": "images/cat-held.webp",
       "quote": "“我们的头脑总是不停地把记忆里的碎片逻辑化、合理化、美化或丑化,而且每一次造访,都似乎令它离原始印象更远一些”",
       "source": "—— 陈冲《猫鱼》"
     },
     {
-      "image": "images/cat-in-box.jpg",
+      "image": "images/cat-in-box.webp",
       "quote": "“也许,要保持原始的记忆,唯有不去触动它”",
       "source": "—— 陈冲《猫鱼》"
     }
