@@ -38,7 +38,7 @@
       "source": "—— 陈冲《猫鱼》"
     }
   ],
-  "pdf": null,
+  "pdf": "pdf/mao-yu.pdf",
   "chapters": [
     {
       "id": "preface",
@@ -50,7 +50,8 @@
           "src": "audio/00-preface.m4a",
           "duration": 162.58
         }
-      ]
+      ],
+      "pdfPage": 12
     },
     {
       "id": "chapter-01",
@@ -68,7 +69,8 @@
           "src": "audio/平江路的老房子 下.m4a",
           "duration": 922.517
         }
-      ]
+      ],
+      "pdfPage": 16
     },
     {
       "id": "chapter-02",
@@ -79,7 +81,8 @@
           "title": "你看过《金瓶梅》吗？上",
           "src": null
         }
-      ]
+      ],
+      "pdfPage": 30
     }
   ]
 }
