@@ -140,6 +140,24 @@
           "title": "第 5 节",
           "src": "audio/03-SiWangXuMu/05.mp3",
           "duration": 198.312
+        },
+        {
+          "id": "si-wang-xu-mu-06",
+          "title": "第 6 节",
+          "src": "audio/03-SiWangXuMu/06.mp3",
+          "duration": 663.288
+        },
+        {
+          "id": "si-wang-xu-mu-07",
+          "title": "第 7 节",
+          "src": "audio/03-SiWangXuMu/07.mp3",
+          "duration": 346.824
+        },
+        {
+          "id": "si-wang-xu-mu-08",
+          "title": "第 8 节",
+          "src": "audio/03-SiWangXuMu/08.mp3",
+          "duration": 95.016
         }
       ]
     }
