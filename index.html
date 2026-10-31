@@ -159,7 +159,7 @@
                         <div>
                             清除缓存
                             <small>
-                                清除当前浏览器的收藏、收听设置和爱心进度
+                                清空标题爱心及三天计时记录，同时重置收藏和收听设置
                             </small>
                         </div>
                         <button class="text-btn" id="clearRecordsBtn">清除缓存</button>
@@ -177,7 +177,7 @@
                         <button aria-label="下一页" id="pdfNext" disabled>›</button>
                         <label><span class="sr-only">阅读缩放</span><select id="pdfZoom" disabled><option value="1">适合宽度</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select></label>
                     </div>
-                    <div id="pdfError" class="library-errors" role="alert" hidden><p>PDF 暂时无法显示，请检查网络后重试。</p><button class="text-btn" id="pdfRetry">重试</button></div>
+                    <div id="pdfError" class="library-errors" role="alert" hidden><p id="pdfErrorText">PDF 暂时无法显示，请稍后重试。</p><button class="text-btn" id="pdfRetry">重试</button></div>
                     <p class="sr-only" id="pdfPageStatus" role="status"></p>
                     <div class="pdf-stage" id="pdfStage" aria-busy="false"><div class="pdf-loading" id="pdfLoading" role="status" hidden><span class="sr-only">正在加载 PDF</span></div><div id="pdfCanvasHost"></div></div>
                 </section>
@@ -200,7 +200,7 @@
         </div>
         <dialog aria-labelledby="clearDialogTitle" id="clearDialog">
             <h2 id="clearDialogTitle">清除缓存？</h2>
-            <p>收藏、收听设置和爱心进度将被清除，书籍文件不受影响。</p>
+            <p>标题爱心及三天计时记录将被清空，收藏和收听设置将被重置，书籍文件不受影响。</p>
             <div class="dialog-actions">
                 <button class="secondary-btn" id="cancelClearBtn">取消</button>
                 <button class="primary-btn" id="confirmClearBtn">确认清除</button>

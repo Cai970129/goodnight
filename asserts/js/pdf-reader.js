@@ -1,21 +1,44 @@
 import { byId } from './ui.js';
 
 const vendor = new URL('../vendor/pdfjs/', import.meta.url);
-let library;
+const build = '?v=6.4.299-legacy';
+let library, loadAttempt = 0;
 
 async function withTimeout(promise) {
     let timeout;
     try {
         return await Promise.race([promise, new Promise((_, reject) => {
-            timeout = setTimeout(() => reject(new Error('PDF request timed out')), 30000);
+            timeout = setTimeout(() => {
+                const error = new Error('PDF operation timed out'); error.name = 'TimeoutError';
+                reject(error);
+            }, 60000);
         })]);
     } finally { clearTimeout(timeout); }
 }
 function loadPDFJS() {
-    return library ||= import(new URL('pdf.min.mjs', vendor).href).then(pdfjs => {
-        pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdf.worker.min.mjs', vendor).href;
-        return pdfjs;
-    }).catch(error => { library = null; throw error; });
+    const query = `${build}${loadAttempt ? '&retry=' + loadAttempt : ''}`;
+    return library ||= import(new URL(`pdf-compat.js${query}`, import.meta.url).href)
+        .then(() => import(new URL(`pdf.min.mjs${query}`, vendor).href))
+        .then(pdfjs => {
+            pdfjs.GlobalWorkerOptions.workerSrc = new URL(`pdf-worker.js${build}`, import.meta.url).href;
+            return pdfjs;
+        }).catch(error => { library = null; ++loadAttempt; throw error; });
+}
+
+function errorMessage(error, phase) {
+    const message = error?.message || '';
+    if (error?.name === 'TimeoutError') return 'PDF 加载超时，请稍后重试。';
+    if (error?.name === 'InvalidPDFException') return 'PDF 文件无法解析或已损坏。';
+    if (error?.name === 'PasswordException') return '这份 PDF 需要密码，暂时无法在页面内阅读。';
+    if (error?.status === 404) return 'PDF 文件未找到，请稍后重试。';
+    if (/does not match the Worker version/i.test(message)) return 'PDF 阅读组件版本不一致，请刷新页面后重试。';
+    if (/not a function|is not defined|unsupported|not supported/i.test(message) || (phase === 'engine' && error?.name === 'SyntaxError')) {
+        return '当前浏览器无法启动 PDF 阅读器，请更新浏览器后重试。';
+    }
+    if (phase === 'engine' || /worker|dynamically imported module/i.test(message)) return 'PDF 阅读组件加载失败，请刷新页面后重试。';
+    if (phase === 'render') return 'PDF 页面显示失败，请稍后重试。';
+    if (navigator.onLine === false) return '当前处于离线状态，连接网络后重试。';
+    return 'PDF 文件加载失败，请稍后重试。';
 }
 
 export class PDFReader {
@@ -47,8 +70,10 @@ export class PDFReader {
         byId('pdfCanvasHost').replaceChildren();
         this.busy(false); this.controls();
     }
-    fail() {
+    fail(error, phase) {
         this.close();
+        byId('pdfErrorText').textContent = errorMessage(error, phase);
+        console.warn('PDF 阅读失败', error);
         byId('pdfPageStatus').textContent = '';
         byId('pdfError').hidden = false;
     }
@@ -59,9 +84,11 @@ export class PDFReader {
         byId('pdfPages').textContent = '—'; byId('pdfPage').value = page;
         byId('pdfZoom').value = zoom; byId('pdfError').hidden = true;
         byId('pdfPageStatus').textContent = ''; this.busy(true);
+        let phase = 'engine';
         try {
             const pdfjs = await withTimeout(loadPDFJS());
             if (generation !== this.generation) return;
+            phase = 'document';
             this.loadingTask = pdfjs.getDocument({
                 url: book.pdf,
                 cMapUrl: new URL('cmaps/', vendor).href, cMapPacked: true,
@@ -77,8 +104,8 @@ export class PDFReader {
             byId('pdfPages').textContent = pdf.numPages;
             byId('pdfPage').max = pdf.numPages;
             this.controls(); await this.render();
-        } catch {
-            if (generation === this.generation) this.fail();
+        } catch (error) {
+            if (generation === this.generation) this.fail(error, phase);
         }
     }
     controls() {
@@ -127,7 +154,7 @@ export class PDFReader {
             this.busy(false);
         } catch (error) {
             if (generation !== this.renderGeneration || error.name === 'RenderingCancelledException') return;
-            this.fail();
+            this.fail(error, 'render');
         }
     }
 }
