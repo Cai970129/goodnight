@@ -97,31 +97,47 @@ class ImportAudioTests(unittest.TestCase):
             self.assertTrue(audio.is_file())
             self.assertLess(audio.stat().st_size, 30000)
 
-    def test_low_bitrate_audio_is_copied_without_reencoding(self):
-        original = self.audio(low=True)
+    def test_low_bitrate_opus_is_copied_without_reencoding(self):
+        original = self.source / '录音1.opus'
+        subprocess.run(['ffmpeg', '-hide_banner', '-nostdin', '-v', 'error', '-f', 'lavfi', '-i',
+                        'sine=frequency=440:duration=1.5', '-ac', '1', '-c:a', 'libopus', '-b:a', '24k',
+                        str(original)], check=True)
         fingerprint = module.digest(original)
         self.assertEqual(self.execute('--apply'), 0)
         self.assertEqual(module.digest(self.book_dir / self.config()['chapters'][0]['tracks'][0]['src']), fingerprint)
         self.assertTrue(original.exists())
 
-    def test_m4a_keeps_its_container_and_is_converted_to_mono(self):
+    def test_m4a_is_converted_to_mono_opus(self):
         target = self.source / '录音1.m4a'
         subprocess.run(['ffmpeg', '-hide_banner', '-nostdin', '-v', 'error', '-f', 'lavfi', '-i',
                         'sine=frequency=440:duration=1.5', '-ar', '48000', '-ac', '2',
                         '-c:a', 'aac', '-b:a', '192k', str(target)], check=True)
         self.assertEqual(self.execute('--apply'), 0)
         track = self.config()['chapters'][0]['tracks'][0]
-        self.assertTrue(track['src'].endswith('01.m4a'))
+        self.assertTrue(track['src'].endswith('01.opus'))
         raw = json.loads(module.command(['ffprobe', '-v', 'error', '-show_entries',
                          'stream=codec_name,channels', '-of', 'json', str(self.book_dir / track['src'])]).stdout)
-        self.assertEqual(raw['streams'][0]['codec_name'], 'aac')
+        self.assertEqual(raw['streams'][0]['codec_name'], 'opus')
         self.assertEqual(raw['streams'][0]['channels'], 1)
+
+    def test_higher_bitrate_opus_is_reduced_and_low_mp3_is_converted(self):
+        opus = self.source / '录音1.opus'
+        subprocess.run(['ffmpeg', '-hide_banner', '-nostdin', '-v', 'error', '-f', 'lavfi', '-i',
+                        'sine=frequency=440:duration=1.5', '-ac', '1', '-c:a', 'libopus', '-b:a', '64k',
+                        str(opus)], check=True)
+        mp3 = self.audio('录音2.mp3', low=True)
+        self.assertEqual(self.execute('--apply'), 0)
+        for track, source in zip(self.config()['chapters'][0]['tracks'], [opus, mp3]):
+            output = self.book_dir / track['src']
+            self.assertEqual(output.suffix, '.opus')
+            self.assertLess(output.stat().st_size, source.stat().st_size)
+            self.assertNotEqual(module.digest(output), module.digest(source))
 
     def test_collision_fails_without_changing_existing_files(self):
         self.audio()
         folder = self.book_dir / 'audio/chapter-01'
         folder.mkdir(parents=True)
-        target = folder / '01.mp3'
+        target = folder / '01.opus'
         target.write_bytes(b'existing')
         before = self.manifest.read_bytes()
         self.assertEqual(self.execute('--apply', '--delete-source'), 1)
@@ -179,7 +195,7 @@ class ImportAudioTests(unittest.TestCase):
             self.assertEqual(self.execute('--apply', '--delete-source'), 1)
         self.assertEqual(before, self.manifest.read_bytes())
         self.assertEqual(readme, self.readme.read_bytes())
-        self.assertEqual(list(self.book_dir.rglob('*.mp3')), [])
+        self.assertEqual(list(self.book_dir.rglob('*.opus')), [])
         self.assertTrue(self.source.exists())
         self.assertFalse((self.root / '.local/import-audio.lock').exists())
 

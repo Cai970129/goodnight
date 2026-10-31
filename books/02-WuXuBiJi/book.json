@@ -28,37 +28,37 @@
           "id": "xie-zuo-zhi-ye-01",
           "title": "第 1 节",
           "src": "audio/01-XieZuoZhiYe/01.opus",
-          "duration": 145.039
+          "duration": 145.046
         },
         {
           "id": "xie-zuo-zhi-ye-02",
           "title": "第 2 节",
           "src": "audio/01-XieZuoZhiYe/02.opus",
-          "duration": 193.276
+          "duration": 193.282
         },
         {
           "id": "xie-zuo-zhi-ye-03",
           "title": "第 3 节",
           "src": "audio/01-XieZuoZhiYe/03.opus",
-          "duration": 359.226
+          "duration": 359.233
         },
         {
           "id": "xie-zuo-zhi-ye-04",
           "title": "第 4 节",
           "src": "audio/01-XieZuoZhiYe/04.opus",
-          "duration": 203.699
+          "duration": 203.706
         },
         {
           "id": "xie-zuo-zhi-ye-05",
           "title": "第 5 节",
           "src": "audio/01-XieZuoZhiYe/05.opus",
-          "duration": 105.325
+          "duration": 105.332
         },
         {
           "id": "xie-zuo-zhi-ye-06",
           "title": "第 6 节",
           "src": "audio/01-XieZuoZhiYe/06.opus",
-          "duration": 214.515
+          "duration": 214.522
         }
       ],
       "pdfPage": 19
@@ -70,38 +70,38 @@
         {
           "id": "can-ji-yu-ai-qing-01",
           "title": "第 1 节",
-          "src": "audio/02-CanJiYuAiQing/01.mp3",
-          "duration": 138.072
+          "src": "audio/02-CanJiYuAiQing/01.opus",
+          "duration": 138.078
         },
         {
           "id": "can-ji-yu-ai-qing-02",
           "title": "第 2 节",
-          "src": "audio/02-CanJiYuAiQing/02.mp3",
-          "duration": 275.736
+          "src": "audio/02-CanJiYuAiQing/02.opus",
+          "duration": 275.743
         },
         {
           "id": "can-ji-yu-ai-qing-03",
           "title": "第 3 节",
-          "src": "audio/02-CanJiYuAiQing/03.mp3",
-          "duration": 328.776
+          "src": "audio/02-CanJiYuAiQing/03.opus",
+          "duration": 328.783
         },
         {
           "id": "can-ji-yu-ai-qing-04",
           "title": "第 4 节",
-          "src": "audio/02-CanJiYuAiQing/04.mp3",
-          "duration": 407.016
+          "src": "audio/02-CanJiYuAiQing/04.opus",
+          "duration": 407.022
         },
         {
           "id": "can-ji-yu-ai-qing-05",
           "title": "第 5 节",
-          "src": "audio/02-CanJiYuAiQing/05.mp3",
-          "duration": 206.76
+          "src": "audio/02-CanJiYuAiQing/05.opus",
+          "duration": 206.767
         },
         {
           "id": "can-ji-yu-ai-qing-06",
           "title": "第 6 节",
-          "src": "audio/02-CanJiYuAiQing/06.mp3",
-          "duration": 68.448
+          "src": "audio/02-CanJiYuAiQing/06.opus",
+          "duration": 68.454
         }
       ],
       "pdfPage": 31
@@ -114,50 +114,50 @@
         {
           "id": "si-wang-xu-mu-01",
           "title": "第 1 节",
-          "src": "audio/03-SiWangXuMu/01.mp3",
-          "duration": 419.952
+          "src": "audio/03-SiWangXuMu/01.opus",
+          "duration": 419.959
         },
         {
           "id": "si-wang-xu-mu-02",
           "title": "第 2 节",
-          "src": "audio/03-SiWangXuMu/02.mp3",
-          "duration": 166.032
+          "src": "audio/03-SiWangXuMu/02.opus",
+          "duration": 166.038
         },
         {
           "id": "si-wang-xu-mu-03",
           "title": "第 3 节",
-          "src": "audio/03-SiWangXuMu/03.mp3",
-          "duration": 129.792
+          "src": "audio/03-SiWangXuMu/03.opus",
+          "duration": 129.798
         },
         {
           "id": "si-wang-xu-mu-04",
           "title": "第 4 节",
-          "src": "audio/03-SiWangXuMu/04.mp3",
-          "duration": 465.768
+          "src": "audio/03-SiWangXuMu/04.opus",
+          "duration": 465.774
         },
         {
           "id": "si-wang-xu-mu-05",
           "title": "第 5 节",
-          "src": "audio/03-SiWangXuMu/05.mp3",
-          "duration": 198.312
+          "src": "audio/03-SiWangXuMu/05.opus",
+          "duration": 198.319
         },
         {
           "id": "si-wang-xu-mu-06",
           "title": "第 6 节",
-          "src": "audio/03-SiWangXuMu/06.mp3",
-          "duration": 663.288
+          "src": "audio/03-SiWangXuMu/06.opus",
+          "duration": 663.294
         },
         {
           "id": "si-wang-xu-mu-07",
           "title": "第 7 节",
-          "src": "audio/03-SiWangXuMu/07.mp3",
-          "duration": 346.824
+          "src": "audio/03-SiWangXuMu/07.opus",
+          "duration": 346.83
         },
         {
           "id": "si-wang-xu-mu-08",
           "title": "第 8 节",
-          "src": "audio/03-SiWangXuMu/08.mp3",
-          "duration": 95.016
+          "src": "audio/03-SiWangXuMu/08.opus",
+          "duration": 95.022
         }
       ]
     }

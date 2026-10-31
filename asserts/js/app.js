@@ -1,6 +1,6 @@
 import { loadLibrary, adjacentTrack } from './library.js';
 import { PreferencesStorage, HEART_RESET_MS } from './storage.js';
-import { Player } from './player.js';
+import { Player, clearEndCounts } from './player.js';
 import { SleepTimer } from './timer.js';
 import { UI, byId } from './ui.js';
 import { PDFReader } from './pdf-reader.js';
@@ -53,7 +53,7 @@ const ui = new UI({
     },
     retry: initialize,
     clear: () => {
-        storage.clear(); applySettings(); updateHeart();
+        storage.clear(); clearEndCounts(); applySettings(); updateHeart();
         ui.updateFavorite(player.book, storage); renderLibrary();
         showStorageWarning();
     }
@@ -105,8 +105,9 @@ player.addEventListener('change', updatePlayback);
 player.addEventListener('ended', () => {
     if (!player.book || !player.track) return;
     const next = adjacentTrack(player.book, player.track.id, 1);
+    const chapterTimer = timer.mode === 'chapter';
     if (timer.trackEnded(!next || next.chapterId !== player.track.chapterId)) return;
-    if (storage.state.settings.autoNext && next) selectTrack(next.id);
+    if (next && (storage.state.settings.autoNext || chapterTimer)) selectTrack(next.id);
 });
 timer.addEventListener('change', () => ui.updateTimer(timer));
 timer.addEventListener('expire', () => { ui.cancelPlayClick(); player.pause(); });

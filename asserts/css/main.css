@@ -1098,6 +1098,7 @@ dialog p {
 }
 .pdf-stage canvas {
     display: block;
+    margin: 0 auto;
     background: white;
 }
 .pdf-stage[aria-busy="true"] canvas {

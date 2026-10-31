@@ -104,6 +104,7 @@ export class Player extends EventTarget {
 }
 
 const endCounts = new Map();
+export function clearEndCounts() { endCounts.clear(); }
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const audio = document.getElementById('audioPlayer');
 

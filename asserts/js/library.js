@@ -102,6 +102,7 @@ export async function loadLibrary(catalogURL = new URL('../../books/catalog.json
 
 export function adjacentTrack(book, trackId, direction) {
     const index = book.tracks.findIndex(track => track.id === trackId);
+    if (index < 0) return null;
     for (let i = index + direction; i >= 0 && i < book.tracks.length; i += direction) {
         if (book.tracks[i].src) return book.tracks[i];
     }

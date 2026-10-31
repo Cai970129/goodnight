@@ -2,8 +2,21 @@ export const STORAGE_KEY = 'goodnight.v1';
 export const HEART_LIMIT = 10;
 export const HEART_RESET_MS = 3 * 24 * 60 * 60 * 1000;
 const speeds = [0.75, 1, 1.25, 1.5, 2];
+const chapterLoopPrefix = 'chapter_loop_count_';
 const fresh = () => ({ version: 1, favorites: [], heartCount: 0, heartStartedAt: null, settings: { speed: 1, autoNext: true } });
 const safeId = value => typeof value === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(value);
+
+function clearChapterLoops(backend) {
+    if (!backend) return;
+    try {
+        const keys = [];
+        for (let i = 0; i < backend.length; i++) {
+            const key = backend.key(i);
+            if (key?.startsWith(chapterLoopPrefix)) keys.push(key);
+        }
+        for (const key of keys) backend.removeItem(key);
+    } catch { /* Storage can be unavailable. */ }
+}
 
 export function normalizeState(raw, now = Date.now()) {
     const state = fresh();
@@ -56,5 +69,5 @@ export class PreferencesStorage {
         this.state.settings = normalizeState({ ...this.state, settings: { ...this.state.settings, ...patch } }).settings;
         this.commit();
     }
-    clear() { this.state = fresh(); this.commit(); }
+    clear() { this.state = fresh(); this.commit(); clearChapterLoops(this.backend); }
 }

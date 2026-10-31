@@ -15,7 +15,7 @@ import tempfile
 from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
-AUDIO_TYPES = {'.mp3', '.m4a', '.wav', '.flac', '.aac', '.ogg'}
+AUDIO_TYPES = {'.mp3', '.m4a', '.wav', '.flac', '.aac', '.ogg', '.opus'}
 ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]*\Z')
 
 
@@ -65,9 +65,9 @@ def analyze(path, repair):
         raise ValueError(f'{path.name} 检测到解码错误。检查原件后可使用 --repair 允许有限修复：\n{warning[:800]}')
     stream = raw['streams'][0]
     bitrate = int(stream.get('bit_rate') or raw['format'].get('bit_rate') or 0)
-    extension = '.m4a' if path.suffix.lower() == '.m4a' and stream['codec_name'] == 'aac' else '.mp3'
-    reusable = (not warning and stream['channels'] == 1 and 0 < bitrate <= 100800
-                and ((extension == '.mp3' and path.suffix.lower() == '.mp3' and stream['codec_name'] == 'mp3') or extension == '.m4a'))
+    extension = '.opus'
+    reusable = (not warning and stream['channels'] == 1 and 0 < bitrate <= 38400
+                and path.suffix.lower() in {'.opus', '.ogg'} and stream['codec_name'] == 'opus')
     return dict(duration=duration, extension=extension, reusable=reusable, warning=warning,
                 size=path.stat().st_size, sha256=digest(path))
 
@@ -173,8 +173,7 @@ def compress(plan, output):
     if plan['reusable']:
         shutil.copy2(plan['source'], output)
     else:
-        codec = ['-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart'] if output.suffix == '.m4a' else [
-            '-c:a', 'libmp3lame', '-b:a', '96k', '-write_xing', '1']
+        codec = ['-c:a', 'libopus', '-b:a', '32k', '-vbr', 'on', '-compression_level', '10', '-application', 'audio']
         command(['ffmpeg', '-hide_banner', '-nostdin', '-v', 'error', '-i', str(plan['source']),
                  '-map', '0:a:0', '-vn', '-af', 'aresample=async=1:first_pts=0,apad',
                  '-t', str(plan['duration']), '-ac', '1', '-ar', '48000', *codec,
@@ -182,10 +181,11 @@ def compress(plan, output):
     command(['ffmpeg', '-hide_banner', '-nostdin', '-v', 'error', '-xerror', '-i', str(output),
              '-map', '0:a:0', '-f', 'null', '-'])
     raw = json.loads(command(['ffprobe', '-v', 'error', '-select_streams', 'a:0', '-show_entries',
-                              'format=duration:stream=channels', '-of', 'json', str(output)]).stdout)
+                              'format=duration:stream=channels,codec_name', '-of', 'json', str(output)]).stdout)
     duration = float(raw['format']['duration'])
-    if abs(duration - plan['duration']) > .1 or raw['streams'][0]['channels'] != 1:
-        raise ValueError(f'输出时长或声道验证失败：{output.name}')
+    if (abs(duration - plan['duration']) > .1 or raw['streams'][0]['channels'] != 1
+            or raw['streams'][0]['codec_name'] != 'opus'):
+        raise ValueError(f'输出时长、声道或编码验证失败：{output.name}')
     if not plan['reusable'] and output.stat().st_size >= plan['size']:
         raise ValueError(f'{plan["source"].name} 转码后未减小体积，请保留原件并单独检查')
     return round(duration, 3)
@@ -325,7 +325,7 @@ def main(argv=None, root=ROOT):
             raise ValueError('执行时必须用 --start 明确起始节，避免重复追加；请先不加 --apply 预览')
         prepared = prepare(args, root.resolve())
         for plan in prepared['plans']:
-            action = '直接复用' if plan['reusable'] else '96kbps 单声道转码'
+            action = '直接复用 Opus' if plan['reusable'] else 'Opus 32kbps 单声道转码'
             print(f'{plan["source"].name} → {plan["target"].relative_to(root)} | 第{plan["number"]}节 | {plan["duration"]:.3f}秒 | {action}')
             if plan['warning']:
                 print(f'  原件有解码警告，修复模式已启用：{plan["warning"][:500]}')
