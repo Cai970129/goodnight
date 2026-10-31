@@ -27,38 +27,38 @@
         {
           "id": "xie-zuo-zhi-ye-01",
           "title": "第 1 节",
-          "src": "audio/01-XieZuoZhiYe/01.mp3",
-          "duration": 145.084
+          "src": "audio/01-XieZuoZhiYe/01.opus",
+          "duration": 145.039
         },
         {
           "id": "xie-zuo-zhi-ye-02",
           "title": "第 2 节",
-          "src": "audio/01-XieZuoZhiYe/02.mp3",
-          "duration": 193.306
+          "src": "audio/01-XieZuoZhiYe/02.opus",
+          "duration": 193.276
         },
         {
           "id": "xie-zuo-zhi-ye-03",
           "title": "第 3 节",
-          "src": "audio/01-XieZuoZhiYe/03.mp3",
-          "duration": 359.262
+          "src": "audio/01-XieZuoZhiYe/03.opus",
+          "duration": 359.226
         },
         {
           "id": "xie-zuo-zhi-ye-04",
           "title": "第 4 节",
-          "src": "audio/01-XieZuoZhiYe/04.mp3",
-          "duration": 203.736
+          "src": "audio/01-XieZuoZhiYe/04.opus",
+          "duration": 203.699
         },
         {
           "id": "xie-zuo-zhi-ye-05",
           "title": "第 5 节",
-          "src": "audio/01-XieZuoZhiYe/05.mp3",
-          "duration": 105.36
+          "src": "audio/01-XieZuoZhiYe/05.opus",
+          "duration": 105.325
         },
         {
           "id": "xie-zuo-zhi-ye-06",
           "title": "第 6 节",
-          "src": "audio/01-XieZuoZhiYe/06.mp3",
-          "duration": 214.536
+          "src": "audio/01-XieZuoZhiYe/06.opus",
+          "duration": 214.515
         }
       ],
       "pdfPage": 19
