@@ -160,6 +160,37 @@
           "duration": 95.022
         }
       ]
+    },
+    {
+      "id": "chapter-04",
+      "title": "第四章 · 童年之门",
+      "pdfPage": 70,
+      "tracks": [
+        {
+          "id": "tong-nian-zhi-men-01",
+          "title": "第 22 节",
+          "src": "audio/04-TongNianZhiMen/01.opus",
+          "duration": 557.839
+        },
+        {
+          "id": "tong-nian-zhi-men-02",
+          "title": "第 23—25 节",
+          "src": "audio/04-TongNianZhiMen/02.opus",
+          "duration": 114.501
+        },
+        {
+          "id": "tong-nian-zhi-men-03",
+          "title": "第 26 节 · 上",
+          "src": "audio/04-TongNianZhiMen/03.opus",
+          "duration": 218.523
+        },
+        {
+          "id": "tong-nian-zhi-men-04",
+          "title": "第 26 节 · 下",
+          "src": "audio/04-TongNianZhiMen/04.opus",
+          "duration": 379.149
+        }
+      ]
     }
   ]
 }
