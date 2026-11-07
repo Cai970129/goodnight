@@ -31,18 +31,25 @@ goodnight/
 │   │   ├── images/
 │   │   ├── audio/
 │   │   └── pdf/
-│   └── 02-WuXuBiJi/
+│   ├── 02-WuXuBiJi/
+│   │   ├── book.json
+│   │   ├── images/
+│   │   ├── audio/
+│   │   │   ├── 01-XieZuoZhiYe/    # 第一章 · 写作之夜
+│   │   │   │   └── *.opus         # 按节号顺序命名
+│   │   │   ├── 02-CanJiYuAiQing/   # 第二章 · 残疾与爱情
+│   │   │   │   └── *.opus
+│   │   │   ├── 03-SiWangXuMu/      # 第三章 · 死亡序幕
+│   │   │   │   └── *.opus
+│   │   │   └── 04-TongNianZhiMen/   # 第四章 · 童年之门
+│   │   │   │   └── *.opus
+│   │   └── pdf/
+│   └── 03-GuanChaDeYiShu/       # 观察的艺术
 │       ├── book.json
 │       ├── images/
 │       ├── audio/
-│       │   ├── 01-XieZuoZhiYe/    # 第一章 · 写作之夜
-│       │   │   └── *.opus         # 按节号顺序命名
-│       │   ├── 02-CanJiYuAiQing/   # 第二章 · 残疾与爱情
-│       │   │   └── *.opus
-│       │   ├── 03-SiWangXuMu/      # 第三章 · 死亡序幕
-│       │   │   └── *.opus
-│       │   └── 04-TongNianZhiMen/   # 第四章 · 童年之门
-│       │       └── *.opus
+│       │   ├── 00-Preface/       # 引言
+│       │   └── 01-MainText/      # 练习1-5 合并音频
 │       └── pdf/
 └── manifest.webmanifest          # 网站名称、图标与桌面入口配置
 ```
@@ -70,15 +77,16 @@ goodnight/
 | --- | --- | --- | --- | --- | --- |
 | 《猫鱼》 | 陈冲 | Carrie | 前言、第一章《平江路的老房子》上、下 | 封面、六组配图与摘录、[PDF 原文](books/01-MaoYu/pdf/mao-yu.pdf) | 第二章 · 你看过《金瓶梅》吗？（上） |
 | 《务虚笔记》 | 史铁生 | yangLieee | 第一章 · 写作之夜（6 节）；第二章 · 残疾与爱情（6 节）；第三章 · 死亡序幕（8 节）；第四章 · 童年之门（4 节） | 封面、一张银杏配图与两段摘录、[PDF 原文](books/02-WuXuBiJi/pdf/wu-xu-bi-ji.pdf) | — |
+| 《观察的艺术》 | 罗伯·沃克 | yangLieee | 引言；正文（练习1-5，合并音频） | 封面、简介、[书籍资料](https://book.douban.com/subject/35807485/) | — |
 
 ## 添加一本新的听书
 
 ### 1. 放置书籍资源
 
-在 `books/` 下按照现有编号新建目录，例如 `03-NewBook/`。每本书分别保存图片、音频和 PDF，软件资源仍放在 `asserts/`。
+在 `books/` 下按照现有编号新建目录，例如 `04-NewBook/`。每本书分别保存图片、音频和 PDF，软件资源仍放在 `asserts/`。
 
 ```text
-books/03-NewBook/
+books/04-NewBook/
 ├── book.json
 ├── images/
 │   └── cover.jpg
@@ -94,11 +102,11 @@ books/03-NewBook/
 
 ### 2. 编写书籍配置
 
-创建 `books/03-NewBook/book.json`：
+创建 `books/04-NewBook/book.json`：
 
 ```json
 {
-  "id": "03-NewBook",
+  "id": "04-NewBook",
   "title": "书名",
   "author": "作者",
   "narrator": "Carrie",
@@ -146,8 +154,8 @@ books/03-NewBook/
 
 ```json
 {
-  "id": "03-NewBook",
-  "manifest": "03-NewBook/book.json"
+  "id": "04-NewBook",
+  "manifest": "04-NewBook/book.json"
 }
 ```
 

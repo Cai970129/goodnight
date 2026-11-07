@@ -8,6 +8,10 @@
     {
       "id": "02-WuXuBiJi",
       "manifest": "02-WuXuBiJi/book.json"
+    },
+    {
+      "id": "03-GuanChaDeYiShu",
+      "manifest": "03-GuanChaDeYiShu/book.json"
     }
   ]
 }

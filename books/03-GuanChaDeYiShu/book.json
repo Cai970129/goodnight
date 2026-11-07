@@ -1,0 +1,36 @@
+{
+  "id": "03-GuanChaDeYiShu",
+  "title": "观察的艺术",
+  "author": "罗伯·沃克",
+  "narrator": "yangLieee",
+  "cover": "images/cover.webp",
+  "pdf": null,
+  "banners": [],
+  "chapters": [
+    {
+      "id": "preface",
+      "title": "引言",
+      "tracks": [
+        {
+          "id": "preface-01",
+          "title": "引言",
+          "src": "audio/00-Preface/01.opus",
+          "duration": 851.311
+        }
+      ]
+    },
+    {
+      "id": "main-text",
+      "title": "正文",
+      "tracks": [
+        {
+          "id": "main-text-01",
+          "title": "练习1-5",
+          "src": "audio/01-MainText/01.opus",
+          "duration": 670.543
+        }
+      ]
+    }
+  ],
+  "description": "围绕 131 个日常观察练习，重新感受身边的人与事，培养专注力、好奇心和创造力。"
+}
