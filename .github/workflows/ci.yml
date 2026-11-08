@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: JavaScript syntax
+        run: |
+          for file in asserts/js/*.js sw.js; do node --check "$file"; done
+      - name: JavaScript tests
+        run: node --test tests/*.test.mjs
+      - name: Python tests
+        run: python3 -B -m unittest discover -s tools -p 'test_*.py'
+      - name: JSON validation
+        run: |
+          python3 -m json.tool manifest.webmanifest > /dev/null
+          for file in books/catalog.json books/*/book.json; do python3 -m json.tool "$file" > /dev/null; done

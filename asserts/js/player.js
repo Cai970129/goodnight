@@ -6,22 +6,36 @@ export function formatTime(seconds) {
 export class Player extends EventTarget {
     constructor(audio) {
         super(); this.audio = audio; this.track = null; this.book = null;
-        this.request = 0; this.pending = false; this.message = ''; this.error = false;
-        for (const event of ['loadedmetadata', 'durationchange', 'seeked', 'pause']) {
+        this.request = 0; this.pending = false; this.buffering = false; this.message = ''; this.error = false;
+        for (const event of ['loadedmetadata', 'durationchange']) {
             audio.addEventListener(event, () => this.emit());
         }
+        audio.addEventListener('seeked', () => { this.buffering = false; this.status(); });
+        audio.addEventListener('pause', () => { this.buffering = false; this.status(); });
         audio.addEventListener('timeupdate', () => { this.emit(); this.updateMediaPosition(); });
+        audio.addEventListener('waiting', () => {
+            if (!this.track || audio.paused || audio.ended || audio.error) return;
+            this.buffering = true; this.status('音频缓冲中，请稍候。');
+        });
+        audio.addEventListener('stalled', () => {
+            if (!this.track || audio.paused || audio.ended || audio.error) return;
+            this.buffering = true; this.status('音频缓冲中，请稍候。');
+        });
+        audio.addEventListener('canplay', () => {
+            if (!this.buffering) return;
+            this.buffering = false; this.status();
+        });
         audio.addEventListener('playing', () => {
             if (!this.track || audio.paused || audio.ended || audio.error || audio.readyState < 2) return;
-            this.pending = false; this.status();
+            this.pending = false; this.buffering = false; this.status();
         });
         audio.addEventListener('ended', () => {
             if (!this.track || !audio.ended) return;
-            ++this.request; this.pending = false; this.status(); this.emit('ended');
+            ++this.request; this.pending = false; this.buffering = false; this.status(); this.emit('ended');
         });
         audio.addEventListener('error', () => {
             if (!this.track?.src || !audio.error) return;
-            ++this.request; this.pending = false; this.status(this.mediaError(), true);
+            ++this.request; this.pending = false; this.buffering = false; this.status(this.mediaError(), true);
         });
     }
     emit(type = 'change') {
@@ -39,7 +53,7 @@ export class Player extends EventTarget {
         }
     }
     select(book, track) {
-        ++this.request; this.pending = false;
+        ++this.request; this.pending = false; this.buffering = false;
         this.track = null; this.audio.pause();
         this.book = book; this.track = track || null;
         this.audio.removeAttribute('src');
@@ -51,7 +65,7 @@ export class Player extends EventTarget {
         const token = ++this.request;
         if (this.audio.error) this.audio.load();
         if (this.audio.ended) this.audio.currentTime = 0;
-        this.pending = true; this.status();
+        this.pending = true; this.buffering = false; this.status();
         try {
             await this.audio.play();
             if (token !== this.request) return;
@@ -63,7 +77,7 @@ export class Player extends EventTarget {
             else this.status();
         }
     }
-    pause() { ++this.request; this.pending = false; this.audio.pause(); this.status(); }
+    pause() { ++this.request; this.pending = false; this.buffering = false; this.audio.pause(); this.status(); }
     toggle() { if (this.pending || !this.audio.paused) this.pause(); else return this.play(); }
     seek(time) {
         if (!this.track || this.audio.error || !Number.isFinite(time) || !Number.isFinite(this.audio.duration) || this.audio.duration <= 0) return;
@@ -77,7 +91,8 @@ export class Player extends EventTarget {
     get state() {
         const a = this.audio;
         return {
-            playing: !this.pending && a.readyState >= 2 && !a.paused && !a.ended && !a.error, pending: this.pending,
+            playing: !this.pending && a.readyState >= 2 && !a.paused && !a.ended && !a.error,
+            pending: this.pending, buffering: this.buffering,
             currentTime: Number.isFinite(a.currentTime) ? a.currentTime : 0,
             duration: Number.isFinite(a.duration) ? a.duration : 0,
             error: this.error || !!a.error, message: this.message

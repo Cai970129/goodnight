@@ -711,6 +711,17 @@ button svg {
     font-variant-numeric: tabular-nums;
 }
 
+.about-note {
+    padding: var(--space-lg);
+}
+
+.about-note p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.9;
+    text-align: center;
+}
+
 .book-details {
     padding: var(--space-sm) var(--space-lg) var(--space-md);
 }
@@ -916,9 +927,13 @@ button svg {
 }
 
 .compact-player-status {
-    color: var(--error);
+    color: var(--muted);
     font-size: 11px;
     margin-top: var(--space-sm);
+}
+
+.compact-player-status[data-error=true] {
+    color: var(--error);
 }
 
 nav {

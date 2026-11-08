@@ -274,7 +274,7 @@ export class UI {
     updatePlayback(player) {
         const { book, track } = player, state = player.state;
         const contentChanged = this.playbackBook !== book || this.playbackTrack !== track;
-        const status = `${state.playing}:${state.pending}:${state.error}:${state.message}`;
+        const status = `${state.playing}:${state.pending}:${state.buffering}:${state.error}:${state.message}`;
         this.hasTrack = !!track?.src;
         byId('compactPlayer').hidden = this.view === 'home' || !this.hasTrack;
         if (contentChanged) {
@@ -298,13 +298,14 @@ export class UI {
             for (const id of ['playBtn', 'compactPlayBtn']) {
                 const button = byId(id); button.disabled = !track?.src;
                 button.setAttribute('aria-pressed', String(state.playing));
-                button.setAttribute('aria-label', state.pending ? '取消加载' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
+                button.setAttribute('aria-label', state.pending ? '取消加载' : state.buffering ? '缓冲中' : state.playing ? '暂停' : state.error ? '重试播放' : '播放');
             }
+            const message = state.error || state.buffering ? state.message : '';
             for (const id of ['playerStatus', 'compactPlayerStatus']) {
-                byId(id).hidden = !state.error || !state.message;
-                setText(id, state.error ? state.message : '');
+                byId(id).hidden = !message;
+                setText(id, message);
+                byId(id).dataset.error = String(state.error);
             }
-            byId('playerStatus').dataset.error = String(state.error);
         }
         const current = formatTime(state.currentTime), duration = formatTime(state.duration);
         setText('currentTime', current); setText('durationTime', duration);

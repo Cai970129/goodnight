@@ -5,11 +5,6 @@ import { SleepTimer } from './timer.js';
 import { UI, byId } from './ui.js';
 import { PDFReader } from './pdf-reader.js';
 
-// Start default images before fetching book data, after the blocking stylesheet.
-document.querySelectorAll('[data-initial-src]').forEach(image => {
-    image.src = image.dataset.initialSrc; image.removeAttribute('data-initial-src');
-});
-
 const DEFAULT_BOOK_ID = '01-MaoYu';
 export const player = new Player(byId('audioPlayer'));
 export const timer = new SleepTimer();
@@ -161,6 +156,13 @@ async function initialize() {
         ui.notice('书架加载失败，请检查网络后重试。', true); showView('shelf');
     } finally { loading = false; byId('retryLibraryBtn').disabled = false; }
 }
+
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register(new URL('../../sw.js', import.meta.url), { updateViaCache: 'none' }).catch(() => {});
+}
+if (document.readyState === 'complete') registerServiceWorker();
+else window.addEventListener('load', registerServiceWorker, { once: true });
 
 ui.updateTimer(timer); updateHeart(); applySettings(); installMediaControls();
 export const ready = initialize();

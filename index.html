@@ -10,6 +10,10 @@
         <link href="./asserts/css/main.css" rel="stylesheet">
         <link href="./manifest.webmanifest" rel="manifest">
         <link href="./asserts/images/icon.svg" rel="icon" type="image/svg+xml">
+        <link href="./asserts/images/apple-touch-icon.png" rel="apple-touch-icon">
+        <meta content="yes" name="mobile-web-app-capable">
+        <meta content="yes" name="apple-mobile-web-app-capable">
+        <meta content="睡前听书" name="apple-mobile-web-app-title">
         <script src="./asserts/js/app.js" type="module"></script>
     </head>
     <body>
@@ -29,7 +33,7 @@
             <main aria-label="听书内容" id="mainContent" tabindex="-1">
                 <section aria-label="收听" id="homeView">
                     <div class="banner" id="bannerPanel">
-                        <img alt="《猫鱼》配图" fetchpriority="high" id="bannerImg" data-initial-src="books/01-MaoYu/images/游泳.webp" decoding="async">
+                        <img alt="《猫鱼》配图" fetchpriority="high" id="bannerImg" src="books/01-MaoYu/images/游泳.webp" decoding="async">
                         <div class="banner-shade"></div>
                         <div class="banner-top">
                             <span>💌 字句予你</span>
@@ -45,7 +49,7 @@
                     </div>
                     <section aria-label="音频播放器" class="player-panel surface">
                         <div class="player-book">
-                            <div class="player-cover" id="playerCoverContainer"><img alt="《猫鱼》封面" data-initial-src="books/01-MaoYu/images/cover.webp" width="52" height="72" decoding="async" fetchpriority="low"></div>
+                            <div class="player-cover" id="playerCoverContainer"><img alt="《猫鱼》封面" src="books/01-MaoYu/images/cover.webp" width="52" height="72" decoding="async" fetchpriority="low"></div>
                             <div class="book-info">
                                 <h2 id="audioTitle">《猫鱼》</h2>
                                 <p id="audioAuthor">陈冲 · 前言</p>
@@ -79,7 +83,7 @@
                                 </svg>
                             </button>
                             <button aria-label="播放" aria-pressed="false" class="play-btn" disabled id="playBtn">
-                                <img alt="" aria-hidden="true" class="player-avatar" fetchpriority="low" data-initial-src="asserts/images/narrator-female.webp" width="56" height="56" decoding="async">
+                                <img alt="" aria-hidden="true" class="player-avatar" fetchpriority="low" src="asserts/images/narrator-female.webp" width="56" height="56" decoding="async">
                             </button>
                             <button aria-label="下一节" class="icon-btn" disabled id="nextBtn">
                                 <svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewBox="0 0 24 24" width="22">
@@ -93,6 +97,9 @@
                             </button>
                         </div>
                         <p aria-live="polite" hidden id="playerStatus" role="status"></p>
+                    </section>
+                    <section aria-label="写在前面" class="about-note surface">
+                        <p>读的人，书不离手，少刷手机，多一分思考；<br>听的人，声不离耳，早入梦乡，多一分收获。<br>两个人，便总有共同话题。</p>
                     </section>
                     <section aria-labelledby="chapterTitle" class="chapter-panel surface">
                         <div class="section-heading">
@@ -186,7 +193,7 @@
                 <div class="compact-player-row">
                     <button aria-label="返回收听页面" class="compact-book" id="returnToPlayerBtn"><strong id="compactBookTitle"></strong><span id="compactTrackTitle"></span></button>
                     <button aria-label="播放" aria-pressed="false" class="play-btn compact-play-btn" id="compactPlayBtn">
-                                <img alt="" aria-hidden="true" class="player-avatar" fetchpriority="low" data-initial-src="asserts/images/narrator-female.webp" width="56" height="56" decoding="async">
+                                <img alt="" aria-hidden="true" class="player-avatar" fetchpriority="low" src="asserts/images/narrator-female.webp" width="56" height="56" decoding="async">
                     </button>
                 </div>
                 <p class="compact-player-status" hidden id="compactPlayerStatus" role="status"></p>
