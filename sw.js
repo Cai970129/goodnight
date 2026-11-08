@@ -1,4 +1,4 @@
-const VERSION = '2026-11-08-5';
+const VERSION = '2026-11-08-6';
 const SHELL_CACHE = `goodnight-shell-${VERSION}`;
 const RUNTIME_CACHE = `goodnight-runtime-${VERSION}`;
 const SHELL = [
