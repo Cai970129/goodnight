@@ -189,6 +189,18 @@
           "title": "第 26 节 · 下",
           "src": "audio/04-TongNianZhiMen/04.opus",
           "duration": 379.149
+        },
+        {
+          "id": "tong-nian-zhi-men-05",
+          "title": "第 27—28 节",
+          "src": "audio/04-TongNianZhiMen/05.opus",
+          "duration": 283.273
+        },
+        {
+          "id": "tong-nian-zhi-men-06",
+          "title": "第 29—30 节",
+          "src": "audio/04-TongNianZhiMen/06.opus",
+          "duration": 399.181
         }
       ]
     }
